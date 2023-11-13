@@ -1,5 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import TestComponent from "../Test/Test";
 
 export function Home() {
   return (
@@ -19,6 +20,7 @@ export function Home() {
       <Typography sx={{ textAlign: "center", mt: "auto" }}>
         Created for internal usage
       </Typography>
+      {/* <TestComponent /> */}
     </Stack>
   );
 }

@@ -11,12 +11,30 @@ type Project = {
   tickets: Ticket[];
 };
 
+export type Link = {
+  link: string;
+  linkName: string;
+};
+
 type Ticket = {
   id: string;
+  createdAt: string;
   ticketName: string;
-  link: string;
+  links: Link[];
   description: string;
-  history: [];
+  ticketHistory: TicketHistoryPost[];
+};
+
+export type TicketInputValues = {
+  ticketName: string;
+  links: Link[];
+  description: string;
+};
+
+export type TicketHistoryPost = {
+  noteDate: Date;
+  message: string;
+  author: string;
 };
 
 type ProjectsContext = {
@@ -74,7 +92,13 @@ export function ProjectsContextProvider({
       tickets: [...editedProject.tickets, ticket],
     };
 
-    setProjects(projects.splice(editedProjectIndex, 1, submittedProject));
+    const updatedProjects = [
+      ...projects.slice(0, editedProjectIndex),
+      submittedProject,
+      ...projects.slice(editedProjectIndex + 1),
+    ];
+
+    setProjects(updatedProjects);
   }
 
   function editTicket(projectId: string, ticket: Ticket) {
