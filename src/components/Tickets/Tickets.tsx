@@ -43,6 +43,8 @@ export function Tickets() {
     },
   });
 
+  // simple check
+
   const { register, handleSubmit, reset, formState, control } = ticketForm;
   const { isSubmitSuccessful, errors } = formState;
 
@@ -72,9 +74,6 @@ export function Tickets() {
       addTicket(projects[selectedProjectIndex].id, newTicket);
     }
   };
-
-  // console.log(selectedTicketIndex);
-  // console.log(projects);
 
   return (
     <Stack>
