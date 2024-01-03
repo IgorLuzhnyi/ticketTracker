@@ -43,8 +43,6 @@ export function Tickets() {
     },
   });
 
-  // simple check
-
   const { register, handleSubmit, reset, formState, control } = ticketForm;
   const { isSubmitSuccessful, errors } = formState;
 
