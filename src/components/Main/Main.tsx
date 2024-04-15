@@ -2,6 +2,8 @@ import { Grid, Box } from "@mui/material";
 import { Projects } from "../Projects/Projects";
 import { Tickets } from "../Tickets/Tickets";
 
+import Test from "../Test/Test";
+
 export function Main() {
   return (
     <Grid
@@ -23,6 +25,7 @@ export function Main() {
           <Tickets />
         </Box>
       </Grid>
+      {/* <Test label="Here is test" /> */}
     </Grid>
   );
 }

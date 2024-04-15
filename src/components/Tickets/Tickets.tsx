@@ -1,3 +1,4 @@
+// components
 import {
   Box,
   Button,
@@ -5,20 +6,31 @@ import {
   FormControl,
   Typography,
   Stack,
-  TextField,
   List,
   ListItem,
   ListItemButton,
   Divider,
 } from "@mui/material";
+import { TicketInputValues, Link } from "../../contexts/projectsContext";
+import CustomInput from "../CustomInput/CustomInput";
+
+// hooks
 import { useProjectsContext } from "../../contexts/projectsContext";
 import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { v4 as uuidv4 } from "uuid";
+
+// helper functions
 import { isURL } from "../../helperFunctions/isUrl";
-import { TicketInputValues, Link } from "../../contexts/projectsContext";
-import { kyivTime } from "../../constants/timeFormat";
+import { kyivTime } from "../../helperFunctions/timeFormat";
+
+// libraries
+import { v4 as uuidv4 } from "uuid";
+
+// assets
 import noTicketsImg from "../../assets/notickets.jpg";
+
+// variables
+import { MAX_ADDITIONAL_TICKET_LINKS } from "../../constants/constants";
 
 export function Tickets() {
   // context
@@ -106,7 +118,7 @@ export function Tickets() {
                         alignSelf: "flex-start",
                       }}
                     >
-                      <TextField
+                      <CustomInput
                         autoFocus
                         variant="outlined"
                         label="Name of the ticket *"
@@ -135,7 +147,7 @@ export function Tickets() {
                         mt: 2,
                       }}
                     >
-                      <TextField
+                      <CustomInput
                         multiline
                         rows={5}
                         label="Description of the issue"
@@ -161,8 +173,8 @@ export function Tickets() {
                     <Box>
                       {fields.map((field, index) => (
                         <Stack direction="row" key={field.id}>
-                          <FormControl sx={{}}>
-                            <TextField
+                          <FormControl>
+                            {/* <TextField
                               variant="outlined"
                               label="Related link"
                               sx={{
@@ -173,11 +185,22 @@ export function Tickets() {
                                   value: /^.{1,100}$/,
                                   message: "100 characters max",
                                 },
-                                validate: (fieldValue) => {
-                                  return (
-                                    isURL(fieldValue) || "You must enter a link"
-                                  );
+                                validate: (fieldValue) =>
+                                  isURL(fieldValue) || "You must enter a link",
+                              })}
+                              error={
+                                !!errors.links && !!errors.links[index]?.link
+                              }
+                            /> */}
+                            <CustomInput
+                              label="Related link"
+                              {...register(`links.${index}.link` as const, {
+                                pattern: {
+                                  value: /^.{1,100}$/,
+                                  message: "100 characters max",
                                 },
+                                validate: (fieldValue) =>
+                                  isURL(fieldValue) || "You must enter a link",
                               })}
                               error={
                                 !!errors.links && !!errors.links[index]?.link
@@ -189,10 +212,10 @@ export function Tickets() {
                                 : ""}
                             </Typography>
                           </FormControl>
-                          <FormControl sx={{}}>
-                            <TextField
+                          <FormControl>
+                            <CustomInput
                               variant="outlined"
-                              label="Name of service"
+                              label="Name of the service"
                               sx={{
                                 backgroundColor: "primary.light",
                               }}
@@ -203,6 +226,7 @@ export function Tickets() {
                                 },
                               })}
                               error={
+                                // this doesn't work, verify
                                 !!errors.links &&
                                 !!errors.links[index]?.linkName
                               }
@@ -214,12 +238,21 @@ export function Tickets() {
                             </Typography>
                           </FormControl>
                           {index > 0 && (
-                            <Button onClick={() => remove(index)}>X</Button>
+                            <Button
+                              color="secondary"
+                              onClick={() => remove(index)}
+                            >
+                              X
+                            </Button>
                           )}
                         </Stack>
                       ))}
                       <Button
-                        onClick={() => append({ link: "", linkName: "" })}
+                        color="secondary"
+                        onClick={() =>
+                          fields.length < MAX_ADDITIONAL_TICKET_LINKS &&
+                          append({ link: "", linkName: "" })
+                        }
                       >
                         Add new ticket link
                       </Button>

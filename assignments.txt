@@ -1,3 +1,5 @@
 1. Make autofocus in Inputs etc
 3. Make everything rems or ems
 4. If cancel or click outside of the input - make errors gone
+5. Close the "new ticket" window when "new project" is clicked
+6. Make max number of additional links
