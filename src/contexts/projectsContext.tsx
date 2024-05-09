@@ -6,28 +6,28 @@ type ProjectsContextProviderProps = {
 };
 
 type Project = {
-  id: string;
+  projectId: string;
   projectName: string;
   tickets: Ticket[];
 };
 
-export type Link = {
+type TicketLink = {
   link: string;
   linkName: string;
 };
 
 type Ticket = {
-  id: string;
+  ticketId: string;
   createdAt: string;
   ticketName: string;
-  links: Link[];
+  links: TicketLink[];
   description: string;
   ticketHistory: TicketHistoryPost[];
 };
 
 export type TicketInputValues = {
   ticketName: string;
-  links: Link[];
+  links: TicketLink[];
   description: string;
 };
 
@@ -61,6 +61,7 @@ export function ProjectsContextProvider({
   children,
 }: ProjectsContextProviderProps) {
   const [projects, setProjects] = useState<Project[]>([]);
+  // const [projects, setProjects] = useState<Project[]>(JSON.parse(window.localStorage.getItem("PROJECTS")));
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<
     null | number
   >(null);
@@ -69,20 +70,25 @@ export function ProjectsContextProvider({
   );
 
   function getProject(projectId: string) {
-    return projects.find((project) => project.id === projectId) as Project;
+    return projects.find(
+      (project) => project.projectId === projectId
+    ) as Project;
   }
 
   function addProject(projectName: string) {
-    setProjects([...projects, { projectName, id: uuidv4(), tickets: [] }]);
+    setProjects([
+      ...projects,
+      { projectName, projectId: uuidv4(), tickets: [] },
+    ]);
   }
 
   function removeProject(projectId: string) {
-    setProjects(projects.filter((project) => project.id !== projectId));
+    setProjects(projects.filter((project) => project.projectId !== projectId));
   }
 
   function addTicket(projectId: string, ticket: Ticket) {
     const editedProject = projects.find(
-      (project: Project) => project.id === projectId
+      (project: Project) => project.projectId === projectId
     ) as Project;
 
     const editedProjectIndex = projects.indexOf(editedProject);
@@ -103,10 +109,10 @@ export function ProjectsContextProvider({
 
   function editTicket(projectId: string, ticket: Ticket) {
     const editedProject = projects.find(
-      (project: Project) => project.id === projectId
+      (project: Project) => project.projectId === projectId
     ) as Project;
     const editedTicket = editedProject?.tickets.find(
-      (curTicket: Ticket) => curTicket.id === ticket.id
+      (curTicket: Ticket) => curTicket.ticketId === ticket.ticketId
     ) as Ticket;
     const editedProjectIndex = projects.indexOf(editedProject);
     const editedTicketIndex = editedProject.tickets.indexOf(editedTicket);
@@ -124,12 +130,12 @@ export function ProjectsContextProvider({
 
   function removeTicket(projectId: string, ticketId: string) {
     const editedProject = projects.find(
-      (project: Project) => project.id === projectId
+      (project: Project) => project.projectId === projectId
     ) as Project;
     const editedProjectIndex = projects.indexOf(editedProject);
 
     const submittedTickets = editedProject.tickets.filter(
-      (curTicket) => curTicket.id !== ticketId
+      (curTicket) => curTicket.ticketId !== ticketId
     );
 
     const submittedProject = { ...editedProject, tickets: submittedTickets };

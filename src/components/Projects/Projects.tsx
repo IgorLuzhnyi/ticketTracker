@@ -1,3 +1,4 @@
+import { Outlet, Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -5,6 +6,7 @@ import {
   TextField,
   Typography,
   Stack,
+  Grid,
   List,
   ListItem,
   ListItemButton,
@@ -53,145 +55,170 @@ export function Projects() {
   }, [isSubmitSuccessful, reset]);
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "info.light",
-        p: 2,
-        borderRadius: ".5rem",
-      }}
-    >
-      <form
-        onSubmit={handleSubmit(submitProject)}
-        noValidate
-        autoComplete="off"
-        style={{ width: "100%" }}
-      >
-        {projectInputIsOpen || (
-          <Button
-            variant="contained"
-            onClick={() => setProjectInputIsOpen(true)}
+    <Grid container spacing={{ xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }}>
+      <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+        <Box
+          sx={{
+            ml: 2,
+            mr: 2,
+            p: 2,
+            backgroundColor: "info.light",
+            borderRadius: ".5rem",
+          }}
+        >
+          <form
+            onSubmit={handleSubmit(submitProject)}
+            noValidate
+            autoComplete="off"
+            style={{ width: "100%" }}
+          >
+            {projectInputIsOpen || (
+              <Button
+                variant="contained"
+                onClick={() => setProjectInputIsOpen(true)}
+                sx={{
+                  color: "secondary.main",
+                  backgroundColor: "info.main",
+                }}
+              >
+                Create new project
+              </Button>
+            )}
+            <FormControl
+              sx={{
+                mb: 2,
+                width: "100%",
+              }}
+            >
+              {projectInputIsOpen && (
+                <TextField
+                  autoFocus
+                  variant="outlined"
+                  id="new-project"
+                  label="Name of the project"
+                  sx={{
+                    backgroundColor: "primary.light",
+                  }}
+                  {...register("projectName", {
+                    required: {
+                      value: true,
+                      message: "Project name is required",
+                    },
+                    pattern: {
+                      value: /^.{1,20}$/,
+                      message: "20 characters max",
+                    },
+                  })}
+                  error={!!errors.projectName}
+                />
+              )}
+              <Typography variant="subtitle2" color="error">
+                {projectInputIsOpen ? errors.projectName?.message : ""}
+              </Typography>
+            </FormControl>
+            {projectInputIsOpen && (
+              <Stack
+                direction="row"
+                sx={{
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    color: "secondary.main",
+                    backgroundColor: "info.main",
+                    width: "48%",
+                  }}
+                >
+                  Submit
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    color: "secondary.main",
+                    backgroundColor: "red",
+                    width: "48%",
+                  }}
+                  onClick={() => setProjectInputIsOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </Stack>
+            )}
+          </form>
+
+          <Box
             sx={{
+              mt: 2,
               color: "secondary.main",
-              backgroundColor: "info.main",
             }}
           >
-            Create new project
-          </Button>
-        )}
-        <FormControl
-          sx={{
-            mb: 2,
-            width: "100%",
-          }}
-        >
-          {projectInputIsOpen && (
-            <TextField
-              autoFocus
-              variant="outlined"
-              id="new-project"
-              label="Name of the project"
+            <Typography variant="h5">Current projects:</Typography>
+            <List
               sx={{
-                backgroundColor: "primary.light",
-              }}
-              {...register("projectName", {
-                required: {
-                  value: true,
-                  message: "Project name is required",
-                },
-                pattern: {
-                  value: /^.{1,20}$/,
-                  message: "20 characters max",
-                },
-              })}
-              error={!!errors.projectName}
-            />
-          )}
-          <Typography variant="subtitle2" color="error">
-            {projectInputIsOpen ? errors.projectName?.message : ""}
-          </Typography>
-        </FormControl>
-        {projectInputIsOpen && (
-          <Stack
-            direction="row"
-            sx={{
-              justifyContent: "space-between",
-            }}
-          >
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                color: "secondary.main",
-                backgroundColor: "info.main",
-                width: "48%",
+                height: "50vh",
+                overflowY: "auto",
               }}
             >
-              Submit
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                color: "secondary.main",
-                backgroundColor: "red",
-                width: "48%",
-              }}
-              onClick={() => setProjectInputIsOpen(false)}
-            >
-              Cancel
-            </Button>
-          </Stack>
-        )}
-      </form>
-      <Box
-        sx={{
-          mt: 2,
-          color: "secondary.main",
-        }}
-      >
-        <Typography variant="h5">Current projects:</Typography>
-        <List
+              {projects.length ? (
+                projects.map((project, i) => (
+                  <Box key={i}>
+                    <ListItem disablePadding>
+                      <ListItemButton
+                        selected={selectedProjectIndex === i}
+                        onClick={() => {
+                          setSelectedProjectIndex(i);
+                          // console.log(projects[i]);
+                        }}
+                        sx={{
+                          "&.Mui-selected": {
+                            backgroundColor: "info.main",
+                            "&:hover": {
+                              backgroundColor: "info.main",
+                            },
+                          },
+                          borderRadius: ".3rem",
+                        }}
+                      >
+                        <Link to={`/projects/${project.projectId}/tickets`}>
+                          {project.projectName}
+                        </Link>
+                      </ListItemButton>
+                    </ListItem>
+                    {i === projects.length - 1 ? null : (
+                      <Divider
+                        sx={{
+                          backgroundColor: "secondary.light",
+                          opacity: ".2",
+                          ml: 2,
+                          mr: 2,
+                        }}
+                      />
+                    )}
+                  </Box>
+                ))
+              ) : (
+                <Typography>No projects yet...</Typography>
+              )}
+            </List>
+          </Box>
+        </Box>
+      </Grid>
+      <Grid item xl={9} lg={9} md={9} sm={9} xs={9}>
+        <Box
           sx={{
-            height: "50vh",
-            overflowY: "auto",
+            mml: 2,
+            mr: 2,
+            p: 2,
+            borderRadius: ".5rem",
+            backgroundColor: "info.light",
           }}
         >
-          {projects.length ? (
-            projects.map((project, i) => (
-              <Box key={i}>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    selected={selectedProjectIndex === i}
-                    onClick={() => setSelectedProjectIndex(i)}
-                    sx={{
-                      "&.Mui-selected": {
-                        backgroundColor: "info.main",
-                        "&:hover": {
-                          backgroundColor: "info.main",
-                        },
-                      },
-                      borderRadius: ".3rem",
-                    }}
-                  >
-                    {project.projectName}
-                  </ListItemButton>
-                </ListItem>
-                {i === projects.length - 1 ? null : (
-                  <Divider
-                    sx={{
-                      backgroundColor: "secondary.light",
-                      opacity: ".2",
-                      ml: 2,
-                      mr: 2,
-                    }}
-                  />
-                )}
-              </Box>
-            ))
-          ) : (
-            <Typography>No projects yet...</Typography>
-          )}
-        </List>
-      </Box>
-    </Box>
+          <Outlet />
+        </Box>
+      </Grid>
+    </Grid>
   );
 }

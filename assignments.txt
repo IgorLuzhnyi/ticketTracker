@@ -2,4 +2,9 @@
 3. Make everything rems or ems
 4. If cancel or click outside of the input - make errors gone
 5. Close the "new ticket" window when "new project" is clicked
-6. Make max number of additional links
+6. Make max number message of additional links
+7. Make "due dates"
+8. Make "error" page
+9. Add sorting functionality
+
+!Prioritized - add error page when there is no such projectId or ticketId in the path

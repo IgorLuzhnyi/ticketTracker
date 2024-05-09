@@ -11,7 +11,8 @@ import {
   ListItemButton,
   Divider,
 } from "@mui/material";
-import { TicketInputValues, Link } from "../../contexts/projectsContext";
+import { Link } from "react-router-dom";
+import { TicketInputValues } from "../../contexts/projectsContext";
 import CustomInput from "../CustomInput/CustomInput";
 
 // hooks
@@ -74,14 +75,15 @@ export function Tickets() {
   const submitTicket = (data: TicketInputValues) => {
     if (selectedProjectIndex !== null) {
       const newTicket = {
-        id: uuidv4(),
+        ticketId: uuidv4(),
         createdAt: kyivTime(),
         ticketName: data.ticketName,
         links: data.links,
         description: data.description,
         ticketHistory: [],
       };
-      addTicket(projects[selectedProjectIndex].id, newTicket);
+      console.log(newTicket);
+      addTicket(projects[selectedProjectIndex].projectId, newTicket);
     }
   };
 
@@ -327,7 +329,26 @@ export function Tickets() {
             projects[selectedProjectIndex].tickets.map((ticket, i) => (
               <Box key={i}>
                 <ListItem>
-                  <ListItemButton>{ticket.ticketName}</ListItemButton>
+                  <ListItemButton
+                    selected={selectedTicketIndex === i}
+                    onClick={() => setSelectedTicketIndex(i)}
+                    sx={{
+                      "&.Mui-selected": {
+                        backgroundColor: "info.main",
+                        "&:hover": {
+                          backgroundColor: "info.main",
+                        },
+                      },
+                      borderRadius: ".3rem",
+                    }}
+                  >
+                    <Link
+                      to={`/projects/${projects[selectedProjectIndex].projectId}/tickets/${ticket.ticketId}`}
+                      style={{}}
+                    >
+                      {ticket.ticketName}
+                    </Link>
+                  </ListItemButton>
                 </ListItem>
                 {i ===
                 projects[selectedProjectIndex].tickets.length - 1 ? null : (
