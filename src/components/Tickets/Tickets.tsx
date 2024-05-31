@@ -92,6 +92,9 @@ export function Tickets() {
       {projects.length !== 0 ? (
         selectedProjectIndex !== null ? (
           <Box>
+            <Typography>
+              Project {projects[selectedProjectIndex].projectName}
+            </Typography>
             <form
               onSubmit={handleSubmit(submitTicket)}
               noValidate

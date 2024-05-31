@@ -1,4 +1,5 @@
 import { useState, useContext, createContext, ReactNode } from "react";
+import { useLocalStorage } from "../custom hooks/useLocalStorage";
 import { v4 as uuidv4 } from "uuid";
 
 type ProjectsContextProviderProps = {
@@ -60,8 +61,10 @@ export function useProjectsContext() {
 export function ProjectsContextProvider({
   children,
 }: ProjectsContextProviderProps) {
-  const [projects, setProjects] = useState<Project[]>([]);
-  // const [projects, setProjects] = useState<Project[]>(JSON.parse(window.localStorage.getItem("PROJECTS")));
+  const { setItem, getItem } = useLocalStorage("PROJECTS");
+  const [projects, setProjects] = useState<Project[]>(
+    getItem() ? getItem() : []
+  );
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<
     null | number
   >(null);
@@ -76,14 +79,14 @@ export function ProjectsContextProvider({
   }
 
   function addProject(projectName: string) {
-    setProjects([
-      ...projects,
-      { projectName, projectId: uuidv4(), tickets: [] },
-    ]);
+    setItem([...projects, { projectName, projectId: uuidv4(), tickets: [] }]);
+    setProjects(getItem());
   }
 
   function removeProject(projectId: string) {
-    setProjects(projects.filter((project) => project.projectId !== projectId));
+    setItem(projects.filter((project) => project.projectId !== projectId));
+    setSelectedProjectIndex(null);
+    setProjects(getItem());
   }
 
   function addTicket(projectId: string, ticket: Ticket) {

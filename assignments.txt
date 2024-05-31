@@ -6,5 +6,5 @@
 7. Make "due dates"
 8. Make "error" page
 9. Add sorting functionality
-
-!Prioritized - add error page when there is no such projectId or ticketId in the path
+10. Prioritized - add error page when there is no such projectId or ticketId in the path.
+11. Prioritized - Eliminate bug with deleting the last project in the list

@@ -25,6 +25,7 @@ export function Projects() {
   const {
     projects,
     addProject,
+    removeProject,
     selectedProjectIndex,
     setSelectedProjectIndex,
   } = useProjectsContext();
@@ -180,12 +181,26 @@ export function Projects() {
                             },
                           },
                           borderRadius: ".3rem",
+                          p: 0,
                         }}
                       >
-                        <Link to={`/projects/${project.projectId}/tickets`}>
+                        <Link
+                          to={`/projects/${project.projectId}/tickets`}
+                          style={{
+                            width: "100%",
+                            padding: "5px",
+                            textAlign: "center",
+                          }}
+                        >
                           {project.projectName}
                         </Link>
                       </ListItemButton>
+                      <Button
+                        sx={{ color: "black" }}
+                        onClick={() => removeProject(project.projectId)}
+                      >
+                        X
+                      </Button>
                     </ListItem>
                     {i === projects.length - 1 ? null : (
                       <Divider
@@ -197,6 +212,21 @@ export function Projects() {
                         }}
                       />
                     )}
+                    {/* <Link
+                      onClick={() => {
+                        console.log(projects[i], i);
+                        setSelectedProjectIndex(i);
+                      }}
+                      to={`/projects/${project.projectId}/tickets`}
+                    >
+                      {project.projectName}
+                    </Link>
+                    <Button
+                      sx={{ color: "black" }}
+                      onClick={() => removeProject(project.projectId)}
+                    >
+                      X
+                    </Button> */}
                   </Box>
                 ))
               ) : (
