@@ -1,10 +1,7 @@
 1. Make autofocus in Inputs etc
 3. Make everything rems or ems
-4. If cancel or click outside of the input - make errors gone
-5. Close the "new ticket" window when "new project" is clicked
 6. Make max number message of additional links
 7. Make "due dates"
-8. Make "error" page
 9. Add sorting functionality
-10. Prioritized - add error page when there is no such projectId or ticketId in the path.
-11. Prioritized - Eliminate bug with deleting the last project in the list
+10. Add error page when there is no such projectId or ticketId in the path.
+11. PRIORITIZED: Add tickets in local Storage

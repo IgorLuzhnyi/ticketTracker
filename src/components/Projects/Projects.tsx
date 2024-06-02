@@ -55,6 +55,10 @@ export function Projects() {
     }
   }, [isSubmitSuccessful, reset]);
 
+  useEffect(() => {
+    setProjectInputIsOpen(false);
+  }, [selectedProjectIndex]);
+
   return (
     <Grid container spacing={{ xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }}>
       <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
@@ -142,7 +146,10 @@ export function Projects() {
                     backgroundColor: "red",
                     width: "48%",
                   }}
-                  onClick={() => setProjectInputIsOpen(false)}
+                  onClick={() => {
+                    reset();
+                    setProjectInputIsOpen(false);
+                  }}
                 >
                   Cancel
                 </Button>

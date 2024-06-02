@@ -41,6 +41,8 @@ export function Tickets() {
     selectedTicketIndex,
     setSelectedTicketIndex,
     addTicket,
+    editTicket,
+    removeTicket,
   } = useProjectsContext();
 
   // variables
@@ -71,6 +73,10 @@ export function Tickets() {
     }
   }, [isSubmitSuccessful, reset]);
 
+  useEffect(() => {
+    setNewTicketInputIsOpen(false);
+  }, [selectedProjectIndex]);
+
   // functions
   const submitTicket = (data: TicketInputValues) => {
     if (selectedProjectIndex !== null) {
@@ -82,7 +88,7 @@ export function Tickets() {
         description: data.description,
         ticketHistory: [],
       };
-      console.log(newTicket);
+      // console.log(newTicket);
       addTicket(projects[selectedProjectIndex].projectId, newTicket);
     }
   };
@@ -299,7 +305,10 @@ export function Tickets() {
                           marginBottom: "auto",
                           alignSelf: "flex-end",
                         }}
-                        onClick={() => setNewTicketInputIsOpen(false)}
+                        onClick={() => {
+                          reset();
+                          setNewTicketInputIsOpen(false);
+                        }}
                       >
                         Cancel
                       </Button>
@@ -331,7 +340,7 @@ export function Tickets() {
           projects[selectedProjectIndex].tickets.length !== 0 ? (
             projects[selectedProjectIndex].tickets.map((ticket, i) => (
               <Box key={i}>
-                <ListItem>
+                <ListItem disablePadding>
                   <ListItemButton
                     selected={selectedTicketIndex === i}
                     onClick={() => setSelectedTicketIndex(i)}
@@ -343,15 +352,36 @@ export function Tickets() {
                         },
                       },
                       borderRadius: ".3rem",
+                      justifyContent: "space-between",
+                      p: 0,
+                      position: "relative",
                     }}
                   >
                     <Link
                       to={`/projects/${projects[selectedProjectIndex].projectId}/tickets/${ticket.ticketId}`}
-                      style={{}}
+                      style={{
+                        width: "100%",
+                        height: "inherit",
+                        padding: "5px",
+                      }}
                     >
                       {ticket.ticketName}
                     </Link>
+                    <Typography sx={{ position: "absolute", right: 0 }}>
+                      Created on {ticket.createdAt}
+                    </Typography>
                   </ListItemButton>
+                  <Button
+                    sx={{ color: "black" }}
+                    onClick={() =>
+                      removeTicket(
+                        projects[selectedProjectIndex].projectId,
+                        ticket.ticketId
+                      )
+                    }
+                  >
+                    X
+                  </Button>
                 </ListItem>
                 {i ===
                 projects[selectedProjectIndex].tickets.length - 1 ? null : (

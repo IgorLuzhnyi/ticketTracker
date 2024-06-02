@@ -107,7 +107,8 @@ export function ProjectsContextProvider({
       ...projects.slice(editedProjectIndex + 1),
     ];
 
-    setProjects(updatedProjects);
+    setItem(updatedProjects);
+    setProjects(getItem());
   }
 
   function editTicket(projectId: string, ticket: Ticket) {
@@ -128,7 +129,12 @@ export function ProjectsContextProvider({
 
     const submittedProject = { ...editedProject, tickets: submittedTickets };
 
-    setProjects(projects.splice(editedProjectIndex, 1, submittedProject));
+    const updatedProjects = projects.map((project, i) =>
+      i !== editedProjectIndex ? project : submittedProject
+    );
+
+    setItem(updatedProjects);
+    setProjects(getItem());
   }
 
   function removeTicket(projectId: string, ticketId: string) {
@@ -143,7 +149,12 @@ export function ProjectsContextProvider({
 
     const submittedProject = { ...editedProject, tickets: submittedTickets };
 
-    setProjects(projects.splice(editedProjectIndex, 1, submittedProject));
+    const updatedProjects = projects.map((project, i) =>
+      i !== editedProjectIndex ? project : submittedProject
+    );
+
+    setItem(updatedProjects);
+    setProjects(getItem());
   }
 
   return (
