@@ -42,6 +42,7 @@ type ProjectsContext = {
   projects: Project[];
   getProject: (projectId: string) => Project;
   addProject: (projectName: string) => void;
+  editProject: (projectName: string, projectIndex: number) => void;
   removeProject: (projectId: string) => void;
   selectedProjectIndex: number | null;
   setSelectedProjectIndex: (projectIndex: number) => void;
@@ -80,6 +81,15 @@ export function ProjectsContextProvider({
 
   function addProject(projectName: string) {
     setItem([...projects, { projectName, projectId: uuidv4(), tickets: [] }]);
+    setProjects(getItem());
+  }
+
+  function editProject(projectName: string, projectIndex: number) {
+    const updatedProjects = projects.map((project, i) =>
+      i !== projectIndex ? project : { ...project, projectName }
+    );
+
+    setItem(updatedProjects);
     setProjects(getItem());
   }
 
@@ -163,6 +173,7 @@ export function ProjectsContextProvider({
         projects,
         getProject,
         addProject,
+        editProject,
         removeProject,
         selectedProjectIndex,
         setSelectedProjectIndex,

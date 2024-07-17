@@ -16,7 +16,7 @@ import { useProjectsContext } from "../../contexts/projectsContext";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-type ProjectInputValues = {
+type ProjectValues = {
   projectName: string;
 };
 
@@ -25,23 +25,31 @@ export function Projects() {
   const {
     projects,
     addProject,
+    editProject,
     removeProject,
     selectedProjectIndex,
     setSelectedProjectIndex,
   } = useProjectsContext();
 
-  // variables
+  // states
   const [projectInputIsOpen, setProjectInputIsOpen] = useState<boolean>(false);
+  const [editedProjectIndex, setEditedProjectIndex] = useState<number>(NaN);
 
   // functions
-  const submitProject = (data: ProjectInputValues) => {
+  const submitNewProject = (data: ProjectValues) => {
     addProject(data.projectName);
   };
 
+  const submitEditedProject = (data: ProjectValues) => {
+    editProject(data.projectName, editedProjectIndex);
+  };
+
   // form setup
-  const projectForm = useForm<ProjectInputValues>({
+  const projectForm = useForm<ProjectValues>({
     defaultValues: {
-      projectName: "",
+      projectName: editedProjectIndex
+        ? projects[editedProjectIndex].projectName
+        : "",
     },
   });
 
@@ -52,6 +60,7 @@ export function Projects() {
     if (isSubmitSuccessful) {
       reset();
       setProjectInputIsOpen(false);
+      setEditedProjectIndex(NaN);
     }
   }, [isSubmitSuccessful, reset]);
 
@@ -72,7 +81,7 @@ export function Projects() {
           }}
         >
           <form
-            onSubmit={handleSubmit(submitProject)}
+            onSubmit={handleSubmit(submitNewProject)}
             noValidate
             autoComplete="off"
             style={{ width: "100%" }}
@@ -173,42 +182,141 @@ export function Projects() {
               {projects.length ? (
                 projects.map((project, i) => (
                   <Box key={i}>
-                    <ListItem disablePadding>
-                      <ListItemButton
-                        selected={selectedProjectIndex === i}
-                        onClick={() => {
-                          setSelectedProjectIndex(i);
-                          // console.log(projects[i]);
-                        }}
+                    {editedProjectIndex === i ? (
+                      <Stack
+                        direction="row"
                         sx={{
-                          "&.Mui-selected": {
-                            backgroundColor: "info.main",
-                            "&:hover": {
-                              backgroundColor: "info.main",
-                            },
-                          },
-                          borderRadius: ".3rem",
-                          p: 0,
+                          width: "100%",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Link
-                          to={`/projects/${project.projectId}/tickets`}
-                          style={{
-                            width: "100%",
-                            padding: "5px",
-                            textAlign: "center",
+                        <form
+                          onSubmit={handleSubmit(submitEditedProject)}
+                          noValidate
+                          autoComplete="off"
+                          style={{ width: "100%" }}
+                        >
+                          <FormControl
+                            sx={{
+                              mb: 2,
+                              width: "100%",
+                            }}
+                          >
+                            {editedProjectIndex >= 0 && (
+                              <TextField
+                                autoFocus
+                                variant="outlined"
+                                // id="new-project"
+                                label="Name of the project"
+                                sx={{
+                                  backgroundColor: "primary.light",
+                                }}
+                                {...register("projectName", {
+                                  required: {
+                                    value: true,
+                                    message: "Project name is required",
+                                  },
+                                  pattern: {
+                                    value: /^.{1,20}$/,
+                                    message: "20 characters max",
+                                  },
+                                })}
+                                error={!!errors.projectName}
+                              />
+                            )}
+                            <Typography variant="subtitle2" color="error">
+                              {projectInputIsOpen
+                                ? errors.projectName?.message
+                                : ""}
+                            </Typography>
+                          </FormControl>
+                          {editedProjectIndex >= 0 && (
+                            <Stack
+                              direction="row"
+                              sx={{
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <Button
+                                type="submit"
+                                variant="contained"
+                                sx={{
+                                  color: "secondary.main",
+                                  backgroundColor: "info.main",
+                                  width: "48%",
+                                }}
+                              >
+                                Submit
+                              </Button>
+                              <Button
+                                variant="contained"
+                                sx={{
+                                  color: "secondary.main",
+                                  backgroundColor: "red",
+                                  width: "48%",
+                                }}
+                                onClick={() => {
+                                  reset();
+                                  setEditedProjectIndex(NaN);
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                            </Stack>
+                          )}
+                        </form>
+                      </Stack>
+                    ) : (
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          selected={selectedProjectIndex === i}
+                          onClick={() => {
+                            setEditedProjectIndex(NaN);
+                            setSelectedProjectIndex(i);
+                            // console.log(projects[i]);
+                          }}
+                          sx={{
+                            "&.Mui-selected": {
+                              backgroundColor: "info.main",
+                              "&:hover": {
+                                backgroundColor: "info.main",
+                              },
+                            },
+                            borderRadius: ".3rem",
+                            p: 0,
                           }}
                         >
-                          {project.projectName}
-                        </Link>
-                      </ListItemButton>
-                      <Button
-                        sx={{ color: "black" }}
-                        onClick={() => removeProject(project.projectId)}
-                      >
-                        X
-                      </Button>
-                    </ListItem>
+                          <Link
+                            to={`/projects/${project.projectId}/tickets`}
+                            style={{
+                              width: "100%",
+                              padding: "5px",
+                              textAlign: "center",
+                            }}
+                          >
+                            {project.projectName}
+                          </Link>
+                        </ListItemButton>
+                        <Button
+                          sx={{ color: "black" }}
+                          onClick={() => {
+                            setProjectInputIsOpen(false);
+                            setEditedProjectIndex(i);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          sx={{ color: "black" }}
+                          onClick={() => {
+                            setEditedProjectIndex(NaN);
+                            removeProject(project.projectId);
+                          }}
+                        >
+                          X
+                        </Button>
+                      </ListItem>
+                    )}
                     {i === projects.length - 1 ? null : (
                       <Divider
                         sx={{
@@ -219,21 +327,6 @@ export function Projects() {
                         }}
                       />
                     )}
-                    {/* <Link
-                      onClick={() => {
-                        console.log(projects[i], i);
-                        setSelectedProjectIndex(i);
-                      }}
-                      to={`/projects/${project.projectId}/tickets`}
-                    >
-                      {project.projectName}
-                    </Link>
-                    <Button
-                      sx={{ color: "black" }}
-                      onClick={() => removeProject(project.projectId)}
-                    >
-                      X
-                    </Button> */}
                   </Box>
                 ))
               ) : (
