@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   FormControl,
-  TextField,
   Typography,
   Stack,
   Grid,
@@ -12,6 +11,7 @@ import {
   ListItemButton,
   Divider,
 } from "@mui/material";
+import CustomInput from "../CustomInput/CustomInput";
 import { useProjectsContext } from "../../contexts/projectsContext";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -45,16 +45,14 @@ export function Projects() {
   };
 
   // form setup
-  const projectForm = useForm<ProjectValues>({
-    defaultValues: {
-      projectName: editedProjectIndex
-        ? projects[editedProjectIndex].projectName
-        : "",
-    },
-  });
+  const projectForm = useForm<ProjectValues>({});
 
   const { register, handleSubmit, reset, formState } = projectForm;
   const { isSubmitSuccessful, errors } = formState;
+
+  useEffect(() => {
+    reset();
+  }, [editedProjectIndex]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -89,7 +87,10 @@ export function Projects() {
             {projectInputIsOpen || (
               <Button
                 variant="contained"
-                onClick={() => setProjectInputIsOpen(true)}
+                onClick={() => {
+                  setEditedProjectIndex(NaN);
+                  setProjectInputIsOpen(true);
+                }}
                 sx={{
                   color: "secondary.main",
                   backgroundColor: "info.main",
@@ -105,7 +106,7 @@ export function Projects() {
               }}
             >
               {projectInputIsOpen && (
-                <TextField
+                <CustomInput
                   autoFocus
                   variant="outlined"
                   id="new-project"
@@ -203,11 +204,16 @@ export function Projects() {
                             }}
                           >
                             {editedProjectIndex >= 0 && (
-                              <TextField
+                              <CustomInput
                                 autoFocus
                                 variant="outlined"
-                                // id="new-project"
                                 label="Name of the project"
+                                id="existing-project"
+                                defaultValue={
+                                  editedProjectIndex >= 0
+                                    ? projects[editedProjectIndex]?.projectName
+                                    : ""
+                                }
                                 sx={{
                                   backgroundColor: "primary.light",
                                 }}
@@ -225,7 +231,7 @@ export function Projects() {
                               />
                             )}
                             <Typography variant="subtitle2" color="error">
-                              {projectInputIsOpen
+                              {editedProjectIndex >= 0
                                 ? errors.projectName?.message
                                 : ""}
                             </Typography>
@@ -273,7 +279,6 @@ export function Projects() {
                           onClick={() => {
                             setEditedProjectIndex(NaN);
                             setSelectedProjectIndex(i);
-                            // console.log(projects[i]);
                           }}
                           sx={{
                             "&.Mui-selected": {

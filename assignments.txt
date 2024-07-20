@@ -4,4 +4,6 @@
 7. Make "due dates"
 9. Add sorting functionality
 10. Add error page when there is no such projectId or ticketId in the path.
-11. PRIORITIZED: Add tickets in local Storage
+11. Add editing tickets functionality
+12. Make sure to put z-index of buttons higher. When creating a new ticket and clicking "edit" button of the project, creating a ticket should close
+13. Change "active" style when clicking Edit/Remove button

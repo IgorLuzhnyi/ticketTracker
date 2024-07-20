@@ -12,8 +12,10 @@ import {
   Divider,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { TicketInputValues } from "../../contexts/projectsContext";
 import CustomInput from "../CustomInput/CustomInput";
+
+// types
+import { TicketInputValues } from "../../contexts/projectsContext";
 
 // hooks
 import { useProjectsContext } from "../../contexts/projectsContext";
@@ -41,7 +43,6 @@ export function Tickets() {
     selectedTicketIndex,
     setSelectedTicketIndex,
     addTicket,
-    editTicket,
     removeTicket,
   } = useProjectsContext();
 
@@ -54,7 +55,6 @@ export function Tickets() {
     defaultValues: {
       ticketName: "",
       description: "",
-      links: [{ link: "", linkName: "" }],
     },
   });
 
@@ -68,12 +68,12 @@ export function Tickets() {
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      reset();
       setNewTicketInputIsOpen(false);
     }
   }, [isSubmitSuccessful, reset]);
 
   useEffect(() => {
+    reset();
     setNewTicketInputIsOpen(false);
   }, [selectedProjectIndex]);
 
@@ -88,7 +88,7 @@ export function Tickets() {
         description: data.description,
         ticketHistory: [],
       };
-      // console.log(newTicket);
+
       addTicket(projects[selectedProjectIndex].projectId, newTicket);
     }
   };

@@ -1,6 +1,7 @@
 import { useState, useContext, createContext, ReactNode } from "react";
 import { useLocalStorage } from "../custom hooks/useLocalStorage";
 import { v4 as uuidv4 } from "uuid";
+import { TICKET_ATTRIBUTES } from "../constants/constants";
 
 type ProjectsContextProviderProps = {
   children: ReactNode;
@@ -47,7 +48,12 @@ type ProjectsContext = {
   selectedProjectIndex: number | null;
   setSelectedProjectIndex: (projectIndex: number) => void;
   addTicket: (projectId: string, ticket: Ticket) => void;
-  editTicket: (projectId: string, ticket: Ticket) => void;
+  updateTicket: (
+    projectId: string,
+    ticketId: string,
+    editableAttribute: string,
+    ticketName: string
+  ) => void;
   removeTicket: (projectId: string, ticketId: string) => void;
   selectedTicketIndex: number | null;
   setSelectedTicketIndex: (ticketIndex: number) => void;
@@ -121,30 +127,47 @@ export function ProjectsContextProvider({
     setProjects(getItem());
   }
 
-  function editTicket(projectId: string, ticket: Ticket) {
+  function updateTicket(
+    projectId: string,
+    ticketId: string,
+    editableAttribute: string,
+    ticketName: string
+  ) {
     const editedProject = projects.find(
       (project: Project) => project.projectId === projectId
     ) as Project;
     const editedTicket = editedProject?.tickets.find(
-      (curTicket: Ticket) => curTicket.ticketId === ticket.ticketId
+      (curTicket: Ticket) => curTicket.ticketId === ticketId
     ) as Ticket;
     const editedProjectIndex = projects.indexOf(editedProject);
     const editedTicketIndex = editedProject.tickets.indexOf(editedTicket);
 
-    const submittedTickets = editedProject.tickets.splice(
-      editedTicketIndex,
-      1,
-      ticket
-    );
+    // HERE SHOULD ADD THE LOGIC DEPENDING ON EDITABLEATTRIBUTE
+    switch (editableAttribute) {
+      case TICKET_ATTRIBUTES.ticketName: {
+        const updatedTicket = {
+          ...projects[editedProjectIndex].tickets[editedTicketIndex],
+          ticketName,
+        };
+        const updatedProject = {
+          ...projects[editedProjectIndex],
+          tickets: [
+            ...projects[editedProjectIndex].tickets.slice(0, editedTicketIndex),
+            updatedTicket,
+            ...projects[editedProjectIndex].tickets.slice(
+              editedTicketIndex + 1
+            ),
+          ],
+        };
 
-    const submittedProject = { ...editedProject, tickets: submittedTickets };
+        const updatedProjects = projects.map((project, i) =>
+          i !== editedProjectIndex ? project : updatedProject
+        );
 
-    const updatedProjects = projects.map((project, i) =>
-      i !== editedProjectIndex ? project : submittedProject
-    );
-
-    setItem(updatedProjects);
-    setProjects(getItem());
+        setItem(updatedProjects);
+        setProjects(getItem());
+      }
+    }
   }
 
   function removeTicket(projectId: string, ticketId: string) {
@@ -178,7 +201,7 @@ export function ProjectsContextProvider({
         selectedProjectIndex,
         setSelectedProjectIndex,
         addTicket,
-        editTicket,
+        updateTicket,
         removeTicket,
         selectedTicketIndex,
         setSelectedTicketIndex,

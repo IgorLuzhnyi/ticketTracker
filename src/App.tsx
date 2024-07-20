@@ -4,7 +4,7 @@ import { Main } from "./components/Main/Main";
 import { Projects } from "./components/Projects/Projects";
 import { NoProjectsPlaceholder } from "./components/Projects/NoProjectsPlaceholder";
 import { Tickets } from "./components/Tickets/Tickets";
-import { Ticket } from "./components/Ticket/Ticket";
+import { Ticket } from "./components/Tickets/Ticket";
 import { ProjectsContextProvider } from "./contexts/projectsContext";
 
 const router = createBrowserRouter([
