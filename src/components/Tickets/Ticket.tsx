@@ -1,12 +1,5 @@
 // components
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  Typography,
-  Stack,
-} from "@mui/material";
+import { Box, Button, FormControl, Typography, Stack } from "@mui/material";
 import CustomInput from "../CustomInput/CustomInput";
 import { Link } from "react-router-dom";
 import { TICKET_ATTRIBUTES } from "../../constants/constants";
@@ -103,6 +96,7 @@ export function Ticket() {
                     autoFocus
                     variant="outlined"
                     label="Name of the ticket *"
+                    defaultValue={currentTicket?.ticketName}
                     sx={{
                       backgroundColor: "primary.light",
                     }}
