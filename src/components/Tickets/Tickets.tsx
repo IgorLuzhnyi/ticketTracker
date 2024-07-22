@@ -54,7 +54,7 @@ export function Tickets() {
   const ticketForm = useForm<TicketInputValues>({
     defaultValues: {
       ticketName: "",
-      description: "",
+      ticketDescription: "",
     },
   });
 
@@ -85,7 +85,7 @@ export function Tickets() {
         createdAt: kyivTime(),
         ticketName: data.ticketName,
         links: data.links,
-        description: data.description,
+        ticketDescription: data.ticketDescription,
         ticketHistory: [],
       };
 
@@ -165,7 +165,7 @@ export function Tickets() {
                         sx={{
                           backgroundColor: "primary.light",
                         }}
-                        {...register("description")}
+                        {...register("ticketDescription")}
                       />
                     </FormControl>
                   </Grid>

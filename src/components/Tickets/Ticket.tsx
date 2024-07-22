@@ -30,7 +30,7 @@ export function Ticket() {
   );
 
   // states
-  const [isEditingTiketName, setIsEditingTicketName] = useState(false);
+  const [currentlyEditing, setCurrentlyEditing] = useState<null | string>(null);
 
   // form setup
   const ticketForm = useForm<TicketInputValues>({});
@@ -43,26 +43,23 @@ export function Ticket() {
   //   control,
   // });
 
-  const updateTicketName = (data: TicketInputValues) => {
+  const updateTicketData = (data: TicketInputValues) => {
+    const [editableAttribute, updatedValue] = Object.entries(data)[0];
+
     if (projectId && ticketId)
-      updateTicket(
-        projectId,
-        ticketId,
-        TICKET_ATTRIBUTES.ticketName,
-        data.ticketName
-      );
+      updateTicket(projectId, ticketId, editableAttribute, updatedValue);
   };
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      setIsEditingTicketName(false);
+      reset();
+      setCurrentlyEditing(null);
     }
   }, [isSubmitSuccessful, reset]);
 
   useEffect(() => {
     reset();
-    setIsEditingTicketName(false);
-  }, [selectedProjectIndex]);
+  }, [selectedProjectIndex, currentlyEditing]);
 
   return (
     <Box>
@@ -77,116 +74,180 @@ export function Ticket() {
           maxWidth: "400px",
         }}
       >
-        {isEditingTiketName ? (
+        {currentlyEditing === TICKET_ATTRIBUTES.ticketName ? (
           <form
-            onSubmit={handleSubmit(updateTicketName)}
+            onSubmit={handleSubmit(updateTicketData)}
             noValidate
             autoComplete="off"
             style={{ width: "100%" }}
           >
-            {isEditingTiketName ? (
-              <Box>
-                <FormControl
-                  sx={{
-                    width: "100%",
-                    alignSelf: "flex-start",
-                  }}
-                >
-                  <CustomInput
-                    autoFocus
-                    variant="outlined"
-                    label="Name of the ticket *"
-                    defaultValue={currentTicket?.ticketName}
-                    sx={{
-                      backgroundColor: "primary.light",
-                    }}
-                    {...register("ticketName", {
-                      required: {
-                        value: true,
-                        message: "Ticket name is required",
-                      },
-                      pattern: {
-                        value: /^.{1,50}$/,
-                        message: "50 characters max",
-                      },
-                    })}
-                    error={!!errors.ticketName}
-                  />
-                  <Typography variant="subtitle2" color="error">
-                    {isEditingTiketName ? errors.ticketName?.message : ""}
-                  </Typography>
-                </FormControl>
-                <Stack direction="row" sx={{ width: "100%" }}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                      color: "secondary.main",
-                      backgroundColor: "info.main",
-                      width: "100%",
-                      mb: 2,
-                    }}
-                  >
-                    Submit
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      color: "secondary.main",
-                      backgroundColor: "red",
-                      width: "100%",
-                      marginBottom: "auto",
-                      alignSelf: "flex-end",
-                    }}
-                    onClick={() => {
-                      reset();
-                      setIsEditingTicketName(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Stack>
-              </Box>
-            ) : (
-              <Button
-                variant="contained"
-                onClick={() => setIsEditingTicketName(true)}
+            <Box>
+              <FormControl
                 sx={{
-                  color: "secondary.main",
-                  backgroundColor: "info.main",
+                  width: "100%",
+                  alignSelf: "flex-start",
                 }}
               >
-                Create new ticket
-              </Button>
-            )}
+                <CustomInput
+                  autoFocus
+                  variant="outlined"
+                  label="Name of the ticket *"
+                  defaultValue={currentTicket?.ticketName}
+                  sx={{
+                    backgroundColor: "primary.light",
+                  }}
+                  {...register("ticketName", {
+                    required: {
+                      value: true,
+                      message: "Ticket name is required",
+                    },
+                    pattern: {
+                      value: /^.{1,50}$/,
+                      message: "50 characters max",
+                    },
+                  })}
+                  error={!!errors.ticketName}
+                />
+                <Typography variant="subtitle2" color="error">
+                  {currentlyEditing === TICKET_ATTRIBUTES.ticketName
+                    ? errors.ticketName?.message
+                    : ""}
+                </Typography>
+              </FormControl>
+              <Stack direction="row" sx={{ width: "100%" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    color: "secondary.main",
+                    backgroundColor: "info.main",
+                    width: "100%",
+                    mb: 2,
+                  }}
+                >
+                  Submit
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    color: "secondary.main",
+                    backgroundColor: "red",
+                    width: "100%",
+                    marginBottom: "auto",
+                    alignSelf: "flex-end",
+                  }}
+                  onClick={() => {
+                    reset();
+                    setCurrentlyEditing(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Stack>
+            </Box>
           </form>
         ) : (
-          // <div>to be edited</div>
-          <Typography sx={{ p: 2 }}>
-            <Typography component="span" sx={{ fontWeight: "bold" }}>
-              Ticket Name
-            </Typography>{" "}
-            {currentTicket?.ticketName}
-          </Typography>
-        )}
-        {isEditingTiketName ? null : (
-          <Button
-            sx={{
-              color: "black",
-              backgroundColor: "secondary.light",
-            }}
-            onClick={() => setIsEditingTicketName(true)}
-          >
-            Edit
-          </Button>
+          <Stack direction="row">
+            <Typography sx={{ p: 2 }}>
+              <Typography component="span" sx={{ fontWeight: "bold" }}>
+                Ticket Name
+              </Typography>{" "}
+              {currentTicket?.ticketName}
+            </Typography>
+            <Button
+              sx={{
+                color: "black",
+                backgroundColor: "secondary.light",
+              }}
+              onClick={() => {
+                setCurrentlyEditing(TICKET_ATTRIBUTES.ticketName);
+              }}
+            >
+              Edit
+            </Button>
+          </Stack>
         )}
       </Box>
       <Typography sx={{ p: 2 }}>
         Created at {currentTicket?.createdAt}
       </Typography>
-      <Typography sx={{ p: 2 }}>
-        Description {currentTicket?.description}
-      </Typography>
+      <Box>
+        {currentlyEditing === TICKET_ATTRIBUTES.ticketDescription ? (
+          <form
+            onSubmit={handleSubmit(updateTicketData)}
+            noValidate
+            autoComplete="off"
+            style={{ width: "100%" }}
+          >
+            <Box>
+              <FormControl
+                sx={{
+                  width: "100%",
+                  alignSelf: "flex-start",
+                }}
+              >
+                <CustomInput
+                  autoFocus
+                  variant="outlined"
+                  label="Ticket description"
+                  defaultValue={currentTicket?.ticketDescription}
+                  sx={{
+                    backgroundColor: "primary.light",
+                  }}
+                  {...register("ticketDescription")}
+                />
+              </FormControl>
+              <Stack direction="row" sx={{ width: "100%" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    color: "secondary.main",
+                    backgroundColor: "info.main",
+                    width: "100%",
+                    mb: 2,
+                  }}
+                >
+                  Submit
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    color: "secondary.main",
+                    backgroundColor: "red",
+                    width: "100%",
+                    marginBottom: "auto",
+                    alignSelf: "flex-end",
+                  }}
+                  onClick={() => {
+                    reset();
+                    setCurrentlyEditing(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Stack>
+            </Box>
+          </form>
+        ) : (
+          <Stack direction="row">
+            <Typography sx={{ p: 2 }}>
+              Description: {currentTicket?.ticketDescription}
+            </Typography>
+            <Button
+              sx={{
+                color: "black",
+                backgroundColor: "secondary.light",
+              }}
+              onClick={() => {
+                setCurrentlyEditing(TICKET_ATTRIBUTES.ticketDescription);
+              }}
+            >
+              Edit
+            </Button>
+          </Stack>
+        )}
+      </Box>
       <Typography sx={{ p: 2 }}>
         History {currentTicket?.ticketHistory.map((post) => post.message)}
       </Typography>
