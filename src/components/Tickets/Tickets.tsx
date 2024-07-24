@@ -55,6 +55,7 @@ export function Tickets() {
     defaultValues: {
       ticketName: "",
       ticketDescription: "",
+      ticketLinks: [],
     },
   });
 
@@ -62,7 +63,7 @@ export function Tickets() {
   const { isSubmitSuccessful, errors } = formState;
 
   const { fields, append, remove } = useFieldArray({
-    name: "links",
+    name: "ticketLinks",
     control,
   });
 
@@ -84,7 +85,7 @@ export function Tickets() {
         ticketId: uuidv4(),
         createdAt: kyivTime(),
         ticketName: data.ticketName,
-        links: data.links,
+        ticketLinks: data.ticketLinks,
         ticketDescription: data.ticketDescription,
         ticketHistory: [],
       };
@@ -185,42 +186,29 @@ export function Tickets() {
                       {fields.map((field, index) => (
                         <Stack direction="row" key={field.id}>
                           <FormControl>
-                            {/* <TextField
-                              variant="outlined"
-                              label="Related link"
-                              sx={{
-                                backgroundColor: "primary.light",
-                              }}
-                              {...register(`links.${index}.link` as const, {
-                                pattern: {
-                                  value: /^.{1,100}$/,
-                                  message: "100 characters max",
-                                },
-                                validate: (fieldValue) =>
-                                  isURL(fieldValue) || "You must enter a link",
-                              })}
-                              error={
-                                !!errors.links && !!errors.links[index]?.link
-                              }
-                            /> */}
                             <CustomInput
                               label="Related link"
-                              {...register(`links.${index}.link` as const, {
-                                pattern: {
-                                  value: /^.{1,100}$/,
-                                  message: "100 characters max",
-                                },
-                                validate: (fieldValue) =>
-                                  isURL(fieldValue) || "You must enter a link",
-                              })}
+                              {...register(
+                                `ticketLinks.${index}.link` as const,
+                                {
+                                  pattern: {
+                                    value: /^.{1,100}$/,
+                                    message: "100 characters max",
+                                  },
+                                  validate: (fieldValue) =>
+                                    isURL(fieldValue) ||
+                                    "You must enter a link",
+                                }
+                              )}
                               error={
-                                !!errors.links && !!errors.links[index]?.link
+                                !!errors.ticketLinks &&
+                                !!errors.ticketLinks[index]?.link
                               }
                             />
                             <Typography variant="subtitle2" color="error">
-                              {newTicketInputIsOpen && errors.links
-                                ? errors.links[index]?.link?.message
-                                : ""}
+                              {newTicketInputIsOpen && errors.ticketLinks
+                                ? errors.ticketLinks[index]?.link?.message
+                                : null}
                             </Typography>
                           </FormControl>
                           <FormControl>
@@ -230,21 +218,24 @@ export function Tickets() {
                               sx={{
                                 backgroundColor: "primary.light",
                               }}
-                              {...register(`links.${index}.linkName` as const, {
-                                pattern: {
-                                  value: /^.{1,30}$/,
-                                  message: "30 characters max",
-                                },
-                              })}
+                              {...register(
+                                `ticketLinks.${index}.linkName` as const,
+                                {
+                                  pattern: {
+                                    value: /^.{1,30}$/,
+                                    message: "30 characters max",
+                                  },
+                                }
+                              )}
                               error={
                                 // this doesn't work, verify
-                                !!errors.links &&
-                                !!errors.links[index]?.linkName
+                                !!errors.ticketLinks &&
+                                !!errors.ticketLinks[index]?.linkName
                               }
                             />
                             <Typography variant="subtitle2" color="error">
-                              {newTicketInputIsOpen && errors.links
-                                ? errors.links[index]?.linkName?.message
+                              {newTicketInputIsOpen && errors.ticketLinks
+                                ? errors.ticketLinks[index]?.linkName?.message
                                 : ""}
                             </Typography>
                           </FormControl>
