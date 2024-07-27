@@ -7,4 +7,7 @@
 11. Add editing tickets functionality
 12. Make sure to put z-index of buttons higher. When creating a new ticket and clicking "edit" button of the project, creating a ticket should close
 13. Change "active" style when clicking Edit/Remove button
-14. PRIORITY: make ticket form a separare component
+15. Check if can refine the form using useWatch - probably would be more neat for defaultValue inside the fields
+16. Make ticket link and link name required
+17. Make ticket links to actually transer
+18. Check if ticket link data id is redundant, remove if so

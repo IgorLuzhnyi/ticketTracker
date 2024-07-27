@@ -1,3 +1,4 @@
+// components
 import { Outlet, Link } from "react-router-dom";
 import {
   Box,
@@ -12,6 +13,8 @@ import {
   Divider,
 } from "@mui/material";
 import CustomInput from "../CustomInput/CustomInput";
+
+// hooks
 import { useProjectsContext } from "../../contexts/projectsContext";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";

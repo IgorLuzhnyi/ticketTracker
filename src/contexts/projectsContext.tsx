@@ -15,6 +15,7 @@ type Project = {
 type TicketLink = {
   link: string;
   linkName: string;
+  id: string;
 };
 
 type Ticket = {

@@ -40,7 +40,6 @@ export function Tickets() {
   const {
     projects,
     selectedProjectIndex,
-    selectedTicketIndex,
     setSelectedTicketIndex,
     addTicket,
     removeTicket,
@@ -55,7 +54,7 @@ export function Tickets() {
     defaultValues: {
       ticketName: "",
       ticketDescription: "",
-      ticketLinks: [],
+      ticketLinks: [{ link: "", linkName: "", id: uuidv4() }],
     },
   });
 
@@ -69,6 +68,7 @@ export function Tickets() {
 
   useEffect(() => {
     if (isSubmitSuccessful) {
+      reset();
       setNewTicketInputIsOpen(false);
     }
   }, [isSubmitSuccessful, reset]);
@@ -228,7 +228,7 @@ export function Tickets() {
                                 }
                               )}
                               error={
-                                // this doesn't work, verify
+                                // this doesn't work, verify - 2 places
                                 !!errors.ticketLinks &&
                                 !!errors.ticketLinks[index]?.linkName
                               }
@@ -253,7 +253,7 @@ export function Tickets() {
                         color="secondary"
                         onClick={() =>
                           fields.length < MAX_ADDITIONAL_TICKET_LINKS &&
-                          append({ link: "", linkName: "" })
+                          append({ link: "", linkName: "", id: uuidv4() })
                         }
                       >
                         Add new ticket link
@@ -333,7 +333,6 @@ export function Tickets() {
               <Box key={i}>
                 <ListItem disablePadding>
                   <ListItemButton
-                    selected={selectedTicketIndex === i}
                     onClick={() => setSelectedTicketIndex(i)}
                     sx={{
                       "&.Mui-selected": {
