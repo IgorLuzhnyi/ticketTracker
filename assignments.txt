@@ -1,13 +1,13 @@
-1. Make autofocus in Inputs etc
-3. Make everything rems or ems
 6. Make max number message of additional links
 7. Make "due dates"
 9. Add sorting functionality
 10. Add error page when there is no such projectId or ticketId in the path.
-11. Add editing tickets functionality
 12. Make sure to put z-index of buttons higher. When creating a new ticket and clicking "edit" button of the project, creating a ticket should close
 13. Change "active" style when clicking Edit/Remove button
 15. Check if can refine the form using useWatch - probably would be more neat for defaultValue inside the fields
-16. Make ticket link and link name required
 17. Make ticket links to actually transer
 18. Check if ticket link data id is redundant, remove if so
+19. Doesn't add space after ":" in Tickets - refine
+20. Spot already existing links
+21. Make links optional - but keep in mind that if a link is added, then linkName should be added too, and vice versa.
+22. fix problem with adding links and editing existing ones simultaneously

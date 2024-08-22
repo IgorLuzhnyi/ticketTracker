@@ -45,7 +45,7 @@ export function Tickets() {
     removeTicket,
   } = useProjectsContext();
 
-  // variables
+  // states
   const [newTicketInputIsOpen, setNewTicketInputIsOpen] =
     useState<boolean>(false);
 
@@ -187,7 +187,7 @@ export function Tickets() {
                         <Stack direction="row" key={field.id}>
                           <FormControl>
                             <CustomInput
-                              label="Related link"
+                              label="Related link *"
                               {...register(
                                 `ticketLinks.${index}.link` as const,
                                 {
@@ -198,6 +198,7 @@ export function Tickets() {
                                   validate: (fieldValue) =>
                                     isURL(fieldValue) ||
                                     "You must enter a link",
+                                  required: true,
                                 }
                               )}
                               error={
@@ -214,7 +215,7 @@ export function Tickets() {
                           <FormControl>
                             <CustomInput
                               variant="outlined"
-                              label="Name of the service"
+                              label="Name of the service *"
                               sx={{
                                 backgroundColor: "primary.light",
                               }}
@@ -225,6 +226,7 @@ export function Tickets() {
                                     value: /^.{1,30}$/,
                                     message: "30 characters max",
                                   },
+                                  required: true,
                                 }
                               )}
                               error={
