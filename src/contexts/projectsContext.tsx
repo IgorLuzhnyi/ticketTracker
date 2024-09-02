@@ -1,43 +1,14 @@
-import { useState, useContext, createContext, ReactNode } from "react";
+import { useState, useContext, createContext } from "react";
 import { useLocalStorage } from "../custom hooks/useLocalStorage";
 import { v4 as uuidv4 } from "uuid";
-
-type ProjectsContextProviderProps = {
-  children: ReactNode;
-};
-
-type Project = {
-  projectId: string;
-  projectName: string;
-  tickets: Ticket[];
-};
-
-type TicketLink = {
-  link: string;
-  linkName: string;
-  id: string;
-};
-
-type Ticket = {
-  ticketId: string;
-  createdAt: string;
-  ticketName: string;
-  ticketLinks: TicketLink[];
-  ticketDescription: string;
-  ticketHistory: TicketHistoryPost[];
-};
-
-export type TicketInputValues = {
-  ticketName: string;
-  ticketDescription: string;
-  ticketLinks: TicketLink[];
-};
-
-export type TicketHistoryPost = {
-  noteDate: Date;
-  message: string;
-  author: string;
-};
+import {
+  ProjectsContextProviderProps,
+  Project,
+  Ticket,
+  TicketLink,
+  TicketHistoryPost,
+} from "./types/types";
+import { ticketActions } from "../constants/constants";
 
 type ProjectsContext = {
   projects: Project[];
@@ -49,8 +20,10 @@ type ProjectsContext = {
   setSelectedProjectIndex: (projectIndex: number) => void;
   addTicket: (projectId: string, ticket: Ticket) => void;
   updateTicket: (
+    action: string | null,
     projectId: string,
     ticketId: string,
+    ticketLinkId: string | null,
     editableAttribute: string,
     updatedValue: string | TicketLink[]
   ) => void;
@@ -128,8 +101,10 @@ export function ProjectsContextProvider({
   }
 
   function updateTicket(
+    action: string | null,
     projectId: string,
     ticketId: string,
+    currentTicketLinkId: string | null,
     editableAttribute: string,
     updatedValue: string | TicketLink[]
   ) {
@@ -142,29 +117,50 @@ export function ProjectsContextProvider({
     const editedProjectIndex = projects.indexOf(editedProject);
     const editedTicketIndex = editedProject.tickets.indexOf(editedTicket);
 
-    if (typeof updatedValue === "string") {
-      const updatedTicket = {
-        ...projects[editedProjectIndex].tickets[editedTicketIndex],
-        [editableAttribute]: updatedValue,
-      };
-      const updatedProject = {
-        ...projects[editedProjectIndex],
-        tickets: [
-          ...projects[editedProjectIndex].tickets.slice(0, editedTicketIndex),
-          updatedTicket,
-          ...projects[editedProjectIndex].tickets.slice(editedTicketIndex + 1),
-        ],
-      };
+    let updatedTicket;
 
-      const updatedProjects = projects.map((project, i) =>
-        i !== editedProjectIndex ? project : updatedProject
-      );
-
-      setItem(updatedProjects);
-      setProjects(getItem());
-    } else {
-      // this condition has yet to be refined or removed. it was made to avoid types inconvenience in updatedValue
+    switch (action) {
+      case ticketActions.editingTicketMainData:
+        updatedTicket = {
+          ...projects[editedProjectIndex].tickets[editedTicketIndex],
+          [editableAttribute]: updatedValue,
+        };
+        break;
+      case ticketActions.editingLink:
+        if (typeof updatedValue !== "string") {
+          const updatedTicketLinkData = {
+            ...updatedValue.filter((ticketLinkData) => ticketLinkData)[0],
+            ticketLinkId: currentTicketLinkId,
+          };
+          updatedTicket = {
+            ...projects[editedProjectIndex].tickets[editedTicketIndex],
+            ticketLinks: projects[editedProjectIndex].tickets[
+              editedTicketIndex
+            ].ticketLinks.map((ticketLinkData) =>
+              ticketLinkData.ticketLinkId === currentTicketLinkId
+                ? updatedTicketLinkData
+                : ticketLinkData
+            ),
+          };
+        }
+        break;
     }
+
+    const updatedProject = {
+      ...projects[editedProjectIndex],
+      tickets: [
+        ...projects[editedProjectIndex].tickets.slice(0, editedTicketIndex),
+        updatedTicket,
+        ...projects[editedProjectIndex].tickets.slice(editedTicketIndex + 1),
+      ],
+    };
+
+    const updatedProjects = projects.map((project, i) =>
+      i !== editedProjectIndex ? project : updatedProject
+    );
+
+    setItem(updatedProjects);
+    setProjects(getItem());
   }
 
   function removeTicket(projectId: string, ticketId: string) {

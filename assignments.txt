@@ -11,3 +11,5 @@
 20. Spot already existing links
 21. Make links optional - but keep in mind that if a link is added, then linkName should be added too, and vice versa.
 22. fix problem with adding links and editing existing ones simultaneously
+23. Make custom buttons
+24. Make links optional

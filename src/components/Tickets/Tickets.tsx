@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import CustomInput from "../CustomInput/CustomInput";
 
 // types
-import { TicketInputValues } from "../../contexts/projectsContext";
+import { TicketInputValues } from "../../contexts/types/types";
 
 // hooks
 import { useProjectsContext } from "../../contexts/projectsContext";
@@ -54,7 +54,7 @@ export function Tickets() {
     defaultValues: {
       ticketName: "",
       ticketDescription: "",
-      ticketLinks: [{ link: "", linkName: "", id: uuidv4() }],
+      ticketLinks: [{ link: "", linkName: "", ticketLinkId: uuidv4() }],
     },
   });
 
@@ -80,6 +80,7 @@ export function Tickets() {
 
   // functions
   const submitTicket = (data: TicketInputValues) => {
+    console.log(data);
     if (selectedProjectIndex !== null) {
       const newTicket = {
         ticketId: uuidv4(),
@@ -255,7 +256,11 @@ export function Tickets() {
                         color="secondary"
                         onClick={() =>
                           fields.length < MAX_ADDITIONAL_TICKET_LINKS &&
-                          append({ link: "", linkName: "", id: uuidv4() })
+                          append({
+                            link: "",
+                            linkName: "",
+                            ticketLinkId: uuidv4(),
+                          })
                         }
                       >
                         Add new ticket link
