@@ -13,3 +13,9 @@
 22. fix problem with adding links and editing existing ones simultaneously
 23. Make custom buttons
 24. Make links optional
+25. There is a behavior when project is removed, but we are still on Ticket editing page with all the data
+26. When adding new link in editing ticket page, Typography with an error doesn't show up in ticket link field. Basically go over all error messages in links here
+28. Work on fields validation when adding links (existing ones are fine, maybe copy their setting). For some reason the form with new links submits, even though the field requirements are not met 
+29. Probably removee uuid, need to leave only useForm's ids created by default. Need to adjust link's type, probably set id as to an optional one or whatever
+
+30. !!! The links are being removed clicking to edit an existing link, than a new link and then ticket name. Once form is submitted, all ticket links are gone

@@ -1,12 +1,14 @@
-export const MAX_ADDITIONAL_TICKET_LINKS = 5;
+export const MAX_TICKET_LINKS = 5;
 
 export const TICKET_ATTRIBUTES = {
   ticketName: "ticketName",
   ticketDescription: "ticketDescription",
+  ticketLinks: "ticketLinks",
 };
 
 export const ticketActions = {
-  editingTicketMainData: "editingTicketMainData",
+  editingTicketName: "editingTicketName",
+  editingTicketDescription: "editingTicketDescription",
   addingLink: "addingLink",
   editingLink: "editingLink",
   removingLink: "removingLink",

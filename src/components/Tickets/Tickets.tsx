@@ -33,7 +33,7 @@ import { v4 as uuidv4 } from "uuid";
 import noTicketsImg from "../../assets/notickets.jpg";
 
 // variables
-import { MAX_ADDITIONAL_TICKET_LINKS } from "../../constants/constants";
+import { MAX_TICKET_LINKS } from "../../constants/constants";
 
 export function Tickets() {
   // context
@@ -54,7 +54,7 @@ export function Tickets() {
     defaultValues: {
       ticketName: "",
       ticketDescription: "",
-      ticketLinks: [{ link: "", linkName: "", ticketLinkId: uuidv4() }],
+      ticketLinks: [{ link: "", linkName: "", id: uuidv4() }],
     },
   });
 
@@ -80,7 +80,6 @@ export function Tickets() {
 
   // functions
   const submitTicket = (data: TicketInputValues) => {
-    console.log(data);
     if (selectedProjectIndex !== null) {
       const newTicket = {
         ticketId: uuidv4(),
@@ -255,11 +254,11 @@ export function Tickets() {
                       <Button
                         color="secondary"
                         onClick={() =>
-                          fields.length < MAX_ADDITIONAL_TICKET_LINKS &&
+                          fields.length < MAX_TICKET_LINKS &&
                           append({
                             link: "",
                             linkName: "",
-                            ticketLinkId: uuidv4(),
+                            id: uuidv4(),
                           })
                         }
                       >

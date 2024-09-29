@@ -8,7 +8,7 @@ import {
   TicketLink,
   TicketHistoryPost,
 } from "./types/types";
-import { ticketActions } from "../constants/constants";
+import { TICKET_ATTRIBUTES, ticketActions } from "../constants/constants";
 
 type ProjectsContext = {
   projects: Project[];
@@ -24,8 +24,7 @@ type ProjectsContext = {
     projectId: string,
     ticketId: string,
     ticketLinkId: string | null,
-    editableAttribute: string,
-    updatedValue: string | TicketLink[]
+    data: object
   ) => void;
   removeTicket: (projectId: string, ticketId: string) => void;
   selectedTicketIndex: number | null;
@@ -105,8 +104,7 @@ export function ProjectsContextProvider({
     projectId: string,
     ticketId: string,
     currentTicketLinkId: string | null,
-    editableAttribute: string,
-    updatedValue: string | TicketLink[]
+    data: object
   ) {
     const editedProject = projects.find(
       (project: Project) => project.projectId === projectId
@@ -116,33 +114,76 @@ export function ProjectsContextProvider({
     ) as Ticket;
     const editedProjectIndex = projects.indexOf(editedProject);
     const editedTicketIndex = editedProject.tickets.indexOf(editedTicket);
+    const currentTicket =
+      projects[editedProjectIndex].tickets[editedTicketIndex];
 
     let updatedTicket;
 
     switch (action) {
-      case ticketActions.editingTicketMainData:
+      case ticketActions.editingTicketName:
+        const updatedTicketName = Object.entries(data).find(
+          (ticketParameter) =>
+            ticketParameter[0] === TICKET_ATTRIBUTES.ticketName
+        )?.[1];
         updatedTicket = {
-          ...projects[editedProjectIndex].tickets[editedTicketIndex],
-          [editableAttribute]: updatedValue,
+          ...currentTicket,
+          ticketName: updatedTicketName,
         };
         break;
+
+      case ticketActions.editingTicketDescription:
+        const updatedTicketDescription = Object.entries(data).find(
+          (ticketParameter) =>
+            ticketParameter[0] === TICKET_ATTRIBUTES.ticketDescription
+        )?.[1];
+        updatedTicket = {
+          ...currentTicket,
+          ticketDescription: updatedTicketDescription,
+        };
+        break;
+
+      case ticketActions.addingLink:
+        const newLink = Object.entries(data).find(
+          (ticketParameter) =>
+            ticketParameter[0] === TICKET_ATTRIBUTES.ticketLinks
+        )?.[1];
+        updatedTicket = {
+          ...currentTicket,
+          ticketLinks: currentTicket.ticketLinks.concat(newLink),
+        };
+        break;
+
       case ticketActions.editingLink:
-        if (typeof updatedValue !== "string") {
-          const updatedTicketLinkData = {
-            ...updatedValue.filter((ticketLinkData) => ticketLinkData)[0],
-            ticketLinkId: currentTicketLinkId,
-          };
-          updatedTicket = {
-            ...projects[editedProjectIndex].tickets[editedTicketIndex],
-            ticketLinks: projects[editedProjectIndex].tickets[
-              editedTicketIndex
-            ].ticketLinks.map((ticketLinkData) =>
-              ticketLinkData.ticketLinkId === currentTicketLinkId
-                ? updatedTicketLinkData
-                : ticketLinkData
-            ),
-          };
-        }
+        const editedLink = Object.entries(data).find(
+          (ticketParameter) =>
+            ticketParameter[0] === TICKET_ATTRIBUTES.ticketLinks
+        )?.[1][0];
+
+        const updatedTicketLinkData = {
+          ...editedLink,
+          id: currentTicketLinkId,
+        };
+        updatedTicket = {
+          ...currentTicket,
+          ticketLinks: projects[editedProjectIndex].tickets[
+            editedTicketIndex
+          ].ticketLinks.map((ticketLinkData) =>
+            ticketLinkData.id === currentTicketLinkId
+              ? updatedTicketLinkData
+              : ticketLinkData
+          ),
+        };
+        break;
+
+      case ticketActions.removingLink:
+        updatedTicket = {
+          ...currentTicket,
+          ticketLinks: projects[editedProjectIndex].tickets[
+            editedTicketIndex
+          ].ticketLinks.filter(
+            (ticketLinkData) => ticketLinkData.id !== currentTicketLinkId
+          ),
+        };
         break;
     }
 

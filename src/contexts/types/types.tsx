@@ -22,7 +22,7 @@ export type Ticket = {
 export type TicketLink = {
   link: string;
   linkName: string;
-  ticketLinkId: string;
+  id: string;
 };
 
 export type TicketInputValues = {
