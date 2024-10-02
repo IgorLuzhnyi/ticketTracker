@@ -1,4 +1,4 @@
-// components
+import * as React from "react";
 import { Outlet, Link } from "react-router-dom";
 import {
   Box,
@@ -11,12 +11,14 @@ import {
   ListItem,
   ListItemButton,
   Divider,
+  IconButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CustomInput from "../CustomInput/CustomInput";
-
-// hooks
 import { useProjectsContext } from "../../contexts/projectsContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { useForm } from "react-hook-form";
 
 type ProjectValues = {
@@ -24,7 +26,6 @@ type ProjectValues = {
 };
 
 export function Projects() {
-  // context
   const {
     projects,
     addProject,
@@ -34,11 +35,12 @@ export function Projects() {
     setSelectedProjectIndex,
   } = useProjectsContext();
 
-  // states
   const [projectInputIsOpen, setProjectInputIsOpen] = useState<boolean>(false);
   const [editedProjectIndex, setEditedProjectIndex] = useState<number>(NaN);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [menuProjectIndex, setMenuProjectIndex] = useState<number | null>(null);
+  const open = Boolean(anchorEl);
 
-  // functions
   const submitNewProject = (data: ProjectValues) => {
     addProject(data.projectName);
   };
@@ -47,9 +49,17 @@ export function Projects() {
     editProject(data.projectName, editedProjectIndex);
   };
 
-  // form setup
-  const projectForm = useForm<ProjectValues>({});
+  const handleClick = (event: MouseEvent<HTMLElement>, index: number) => {
+    setAnchorEl(event.currentTarget);
+    setMenuProjectIndex(index);
+  };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+    setMenuProjectIndex(null);
+  };
+
+  const projectForm = useForm<ProjectValues>({});
   const { register, handleSubmit, reset, formState } = projectForm;
   const { isSubmitSuccessful, errors } = formState;
 
@@ -87,36 +97,26 @@ export function Projects() {
             autoComplete="off"
             style={{ width: "100%" }}
           >
-            {projectInputIsOpen || (
+            {!projectInputIsOpen && (
               <Button
                 variant="contained"
                 onClick={() => {
                   setEditedProjectIndex(NaN);
                   setProjectInputIsOpen(true);
                 }}
-                sx={{
-                  color: "secondary.main",
-                  backgroundColor: "info.main",
-                }}
+                sx={{ color: "secondary.main", backgroundColor: "info.main" }}
               >
                 Create new project
               </Button>
             )}
-            <FormControl
-              sx={{
-                mb: 2,
-                width: "100%",
-              }}
-            >
+            <FormControl sx={{ mb: 2, width: "100%" }}>
               {projectInputIsOpen && (
                 <CustomInput
                   autoFocus
                   variant="outlined"
                   id="new-project"
                   label="Name of the project"
-                  sx={{
-                    backgroundColor: "primary.light",
-                  }}
+                  sx={{ backgroundColor: "primary.light" }}
                   {...register("projectName", {
                     required: {
                       value: true,
@@ -135,12 +135,7 @@ export function Projects() {
               </Typography>
             </FormControl>
             {projectInputIsOpen && (
-              <Stack
-                direction="row"
-                sx={{
-                  justifyContent: "space-between",
-                }}
-              >
+              <Stack direction="row" sx={{ justifyContent: "space-between" }}>
                 <Button
                   type="submit"
                   variant="contained"
@@ -170,29 +165,16 @@ export function Projects() {
             )}
           </form>
 
-          <Box
-            sx={{
-              mt: 2,
-              color: "secondary.main",
-            }}
-          >
+          <Box sx={{ mt: 2, color: "secondary.main" }}>
             <Typography variant="h5">Current projects:</Typography>
-            <List
-              sx={{
-                height: "50vh",
-                overflowY: "auto",
-              }}
-            >
+            <List sx={{ height: "50vh", overflowY: "auto" }}>
               {projects.length ? (
                 projects.map((project, i) => (
                   <Box key={i}>
                     {editedProjectIndex === i ? (
                       <Stack
                         direction="row"
-                        sx={{
-                          width: "100%",
-                          justifyContent: "space-between",
-                        }}
+                        sx={{ width: "100%", justifyContent: "space-between" }}
                       >
                         <form
                           onSubmit={handleSubmit(submitEditedProject)}
@@ -200,12 +182,7 @@ export function Projects() {
                           autoComplete="off"
                           style={{ width: "100%" }}
                         >
-                          <FormControl
-                            sx={{
-                              mb: 2,
-                              width: "100%",
-                            }}
-                          >
+                          <FormControl sx={{ mb: 2, width: "100%" }}>
                             {editedProjectIndex >= 0 && (
                               <CustomInput
                                 autoFocus
@@ -217,9 +194,7 @@ export function Projects() {
                                     ? projects[editedProjectIndex]?.projectName
                                     : ""
                                 }
-                                sx={{
-                                  backgroundColor: "primary.light",
-                                }}
+                                sx={{ backgroundColor: "primary.light" }}
                                 {...register("projectName", {
                                   required: {
                                     value: true,
@@ -242,9 +217,7 @@ export function Projects() {
                           {editedProjectIndex >= 0 && (
                             <Stack
                               direction="row"
-                              sx={{
-                                justifyContent: "space-between",
-                              }}
+                              sx={{ justifyContent: "space-between" }}
                             >
                               <Button
                                 type="submit"
@@ -304,25 +277,48 @@ export function Projects() {
                           >
                             {project.projectName}
                           </Link>
+                          <Stack>
+                            <IconButton
+                              onClick={(event) => {
+                                handleClick(event, i);
+                                event.stopPropagation();
+                              }}
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                            {menuProjectIndex === i && (
+                              <Menu
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                onClick={(event) => event.stopPropagation()}
+                              >
+                                <MenuItem
+                                  selected={false}
+                                  onClick={(event) => {
+                                    handleClose();
+                                    event.stopPropagation();
+                                    setProjectInputIsOpen(false);
+                                    setEditedProjectIndex(i);
+                                  }}
+                                >
+                                  <Typography>Edit</Typography>
+                                </MenuItem>
+                                <MenuItem
+                                  selected={false}
+                                  onClick={(event) => {
+                                    handleClose();
+                                    event.stopPropagation();
+                                    setEditedProjectIndex(NaN);
+                                    removeProject(project.projectId);
+                                  }}
+                                >
+                                  <Typography>Delete</Typography>
+                                </MenuItem>
+                              </Menu>
+                            )}
+                          </Stack>
                         </ListItemButton>
-                        <Button
-                          sx={{ color: "black" }}
-                          onClick={() => {
-                            setProjectInputIsOpen(false);
-                            setEditedProjectIndex(i);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          sx={{ color: "black" }}
-                          onClick={() => {
-                            setEditedProjectIndex(NaN);
-                            removeProject(project.projectId);
-                          }}
-                        >
-                          X
-                        </Button>
                       </ListItem>
                     )}
                     {i === projects.length - 1 ? null : (
@@ -347,7 +343,7 @@ export function Projects() {
       <Grid item xl={9} lg={9} md={9} sm={9} xs={9}>
         <Box
           sx={{
-            mml: 2,
+            ml: 2,
             mr: 2,
             p: 2,
             borderRadius: ".5rem",

@@ -14,6 +14,7 @@ export type Ticket = {
   ticketId: string;
   createdAt: string;
   ticketName: string;
+  ticketStatus: string;
   ticketLinks: TicketLink[];
   ticketDescription: string;
   ticketHistory: TicketHistoryPost[];

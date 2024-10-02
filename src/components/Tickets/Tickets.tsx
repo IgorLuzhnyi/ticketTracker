@@ -85,6 +85,7 @@ export function Tickets() {
         ticketId: uuidv4(),
         createdAt: kyivTime(),
         ticketName: data.ticketName,
+        ticketStatus: "active",
         ticketLinks: data.ticketLinks,
         ticketDescription: data.ticketDescription,
         ticketHistory: [],
