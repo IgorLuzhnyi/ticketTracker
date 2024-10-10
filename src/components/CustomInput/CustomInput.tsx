@@ -12,15 +12,36 @@ const CustomInput = forwardRef<
   HTMLInputElement,
   CustomInputProps & TextFieldProps
 >((props, ref) => {
+  const { sx, ...rest } = props;
+
   return (
     <TextField
       ref={ref}
-      {...props}
-      variant="outlined"
+      {...rest}
+      size="small"
+      slotProps={{
+        inputLabel: {
+          sx: {
+            fontSize: "14px",
+          },
+        },
+      }}
       sx={{
-        backgroundColor: "primary.light",
+        ...sx,
         mr: 1,
         mb: 1,
+        borderRadius: "none",
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
+            borderColor: "secondary.main",
+          },
+          "&:hover fieldset": {
+            borderColor: "primary.main",
+          },
+          "&.Mui-focused fieldset": {
+            borderColor: "primary.main",
+          },
+        },
       }}
     />
   );

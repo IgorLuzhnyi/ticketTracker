@@ -135,9 +135,6 @@ export function Tickets() {
                         autoFocus
                         variant="outlined"
                         label="Name of the ticket *"
-                        sx={{
-                          backgroundColor: "primary.light",
-                        }}
                         {...register("ticketName", {
                           required: {
                             value: true,
@@ -164,9 +161,6 @@ export function Tickets() {
                         multiline
                         rows={5}
                         label="Description of the issue"
-                        sx={{
-                          backgroundColor: "primary.light",
-                        }}
                         {...register("ticketDescription")}
                       />
                     </FormControl>
@@ -217,9 +211,6 @@ export function Tickets() {
                             <CustomInput
                               variant="outlined"
                               label="Name of the service *"
-                              sx={{
-                                backgroundColor: "primary.light",
-                              }}
                               {...register(
                                 `ticketLinks.${index}.linkName` as const,
                                 {
@@ -342,6 +333,7 @@ export function Tickets() {
                   <ListItemButton
                     onClick={() => setSelectedTicketIndex(i)}
                     sx={{
+                      // backgroundColor: "secondary.main",
                       "&.Mui-selected": {
                         backgroundColor: "info.main",
                         "&:hover": {
@@ -360,6 +352,7 @@ export function Tickets() {
                         width: "100%",
                         height: "inherit",
                         padding: "5px",
+                        textDecoration: "none",
                       }}
                     >
                       {ticket.ticketName}
@@ -384,7 +377,7 @@ export function Tickets() {
                 projects[selectedProjectIndex].tickets.length - 1 ? null : (
                   <Divider
                     sx={{
-                      backgroundColor: "secondary.light",
+                      backgroundColor: "secondary.dark",
                       opacity: ".2",
                       ml: 2,
                       mr: 2,

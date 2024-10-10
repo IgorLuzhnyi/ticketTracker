@@ -1,12 +1,11 @@
-import * as React from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
   FormControl,
   Typography,
   Stack,
-  Grid,
+  Grid2 as Grid,
   List,
   ListItem,
   ListItemButton,
@@ -17,6 +16,11 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CustomInput from "../CustomInput/CustomInput";
+import {
+  CustomButton,
+  confirmButtonStyling,
+  declineButtonStyling,
+} from "../CustomButtons/CustomButton";
 import { useProjectsContext } from "../../contexts/projectsContext";
 import { useState, useEffect, MouseEvent } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +44,8 @@ export function Projects() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [menuProjectIndex, setMenuProjectIndex] = useState<number | null>(null);
   const open = Boolean(anchorEl);
+
+  const navigate = useNavigate();
 
   const submitNewProject = (data: ProjectValues) => {
     addProject(data.projectName);
@@ -80,92 +86,103 @@ export function Projects() {
   }, [selectedProjectIndex]);
 
   return (
-    <Grid container spacing={{ xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }}>
-      <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+    <Grid container spacing={1}>
+      <Grid size={2.5}>
         <Box
           sx={{
             ml: 2,
             mr: 2,
             p: 2,
-            backgroundColor: "info.light",
+            pt: 3,
+            backgroundColor: "secondary.light",
             borderRadius: ".5rem",
+            height: "600px",
           }}
         >
-          <form
-            onSubmit={handleSubmit(submitNewProject)}
-            noValidate
-            autoComplete="off"
-            style={{ width: "100%" }}
+          <Box
+            sx={{
+              height: "90px",
+              display: "block",
+              position: "relative",
+            }}
           >
             {!projectInputIsOpen && (
-              <Button
-                variant="contained"
+              <CustomButton
+                sx={{
+                  width: "250px",
+                  p: 1,
+                  position: "absolute",
+                  top: "30%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
                 onClick={() => {
                   setEditedProjectIndex(NaN);
                   setProjectInputIsOpen(true);
                 }}
-                sx={{ color: "secondary.main", backgroundColor: "info.main" }}
               >
                 Create new project
-              </Button>
+              </CustomButton>
             )}
-            <FormControl sx={{ mb: 2, width: "100%" }}>
+            <form
+              onSubmit={handleSubmit(submitNewProject)}
+              noValidate
+              autoComplete="off"
+              style={{ width: "100%" }}
+            >
+              <FormControl sx={{ width: "100%" }}>
+                {projectInputIsOpen && (
+                  <CustomInput
+                    autoFocus
+                    variant="outlined"
+                    id="new-project"
+                    // sx={{ maxWidth: "250px" }}
+                    label="Name of the project"
+                    {...register("projectName", {
+                      required: {
+                        value: true,
+                        message: "Project name is required",
+                      },
+                      pattern: {
+                        value: /^.{1,20}$/,
+                        message: "20 characters max",
+                      },
+                    })}
+                    error={!!errors.projectName}
+                  />
+                )}
+                <Typography variant="subtitle2" color="error">
+                  {projectInputIsOpen ? errors.projectName?.message : ""}
+                </Typography>
+              </FormControl>
               {projectInputIsOpen && (
-                <CustomInput
-                  autoFocus
-                  variant="outlined"
-                  id="new-project"
-                  label="Name of the project"
-                  sx={{ backgroundColor: "primary.light" }}
-                  {...register("projectName", {
-                    required: {
-                      value: true,
-                      message: "Project name is required",
-                    },
-                    pattern: {
-                      value: /^.{1,20}$/,
-                      message: "20 characters max",
-                    },
-                  })}
-                  error={!!errors.projectName}
-                />
+                <Stack
+                  direction="row"
+                  sx={{ justifyContent: "space-between", width: "260px" }}
+                >
+                  <CustomButton
+                    type="submit"
+                    variant="contained"
+                    sx={{ ...confirmButtonStyling, width: "48%" }}
+                  >
+                    Submit
+                  </CustomButton>
+                  <CustomButton
+                    variant="contained"
+                    sx={{ ...declineButtonStyling, width: "48%" }}
+                    onClick={() => {
+                      reset();
+                      setProjectInputIsOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </CustomButton>
+                </Stack>
               )}
-              <Typography variant="subtitle2" color="error">
-                {projectInputIsOpen ? errors.projectName?.message : ""}
-              </Typography>
-            </FormControl>
-            {projectInputIsOpen && (
-              <Stack direction="row" sx={{ justifyContent: "space-between" }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{
-                    color: "secondary.main",
-                    backgroundColor: "info.main",
-                    width: "48%",
-                  }}
-                >
-                  Submit
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{
-                    color: "secondary.main",
-                    backgroundColor: "red",
-                    width: "48%",
-                  }}
-                  onClick={() => {
-                    reset();
-                    setProjectInputIsOpen(false);
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Stack>
-            )}
-          </form>
+            </form>
+          </Box>
 
-          <Box sx={{ mt: 2, color: "secondary.main" }}>
+          <Box sx={{ mt: 2, color: "secondary.dark" }}>
             <Typography variant="h5">Current projects:</Typography>
             <List sx={{ height: "50vh", overflowY: "auto" }}>
               {projects.length ? (
@@ -249,34 +266,31 @@ export function Projects() {
                         </form>
                       </Stack>
                     ) : (
-                      <ListItem disablePadding>
+                      <ListItem
+                        disablePadding
+                        onClick={() => {
+                          setEditedProjectIndex(NaN);
+                          setSelectedProjectIndex(i);
+                          navigate(`/projects/${project.projectId}/tickets`);
+                        }}
+                      >
                         <ListItemButton
                           selected={selectedProjectIndex === i}
-                          onClick={() => {
-                            setEditedProjectIndex(NaN);
-                            setSelectedProjectIndex(i);
-                          }}
                           sx={{
                             "&.Mui-selected": {
-                              backgroundColor: "info.main",
+                              backgroundColor: "primary.main",
                               "&:hover": {
-                                backgroundColor: "info.main",
+                                backgroundColor: "primary.main",
                               },
                             },
-                            borderRadius: ".3rem",
-                            p: 0,
+                            backgroundColor: "info.main",
+                            pt: 1,
+                            pb: 1,
+                            justifyContent: "space-between",
                           }}
                         >
-                          <Link
-                            to={`/projects/${project.projectId}/tickets`}
-                            style={{
-                              width: "100%",
-                              padding: "5px",
-                              textAlign: "center",
-                            }}
-                          >
-                            {project.projectName}
-                          </Link>
+                          <Typography>{project.projectName}</Typography>
+                          {/* </Link> */}
                           <Stack>
                             <IconButton
                               onClick={(event) => {
@@ -324,7 +338,7 @@ export function Projects() {
                     {i === projects.length - 1 ? null : (
                       <Divider
                         sx={{
-                          backgroundColor: "secondary.light",
+                          backgroundColor: "secondary.dark",
                           opacity: ".2",
                           ml: 2,
                           mr: 2,
@@ -340,14 +354,14 @@ export function Projects() {
           </Box>
         </Box>
       </Grid>
-      <Grid item xl={9} lg={9} md={9} sm={9} xs={9}>
+      <Grid size={9.5}>
         <Box
           sx={{
             ml: 2,
             mr: 2,
             p: 2,
             borderRadius: ".5rem",
-            backgroundColor: "info.light",
+            backgroundColor: "secondary.light",
           }}
         >
           <Outlet />
