@@ -28,8 +28,7 @@ const CustomInput = forwardRef<
       }}
       sx={{
         ...sx,
-        mr: 1,
-        mb: 1,
+        mb: 0.5,
         borderRadius: "none",
         "& .MuiOutlinedInput-root": {
           "& fieldset": {

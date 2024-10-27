@@ -18,3 +18,6 @@
 28. Work on fields validation when adding links (existing ones are fine, maybe copy their setting). For some reason the form with new links submits, even though the field requirements are not met 
 29. Probably remove uuid, need to leave only useForm's ids created by default. Need to adjust link's type, probably set id as to an optional one or whatever
 31. Work on ticket statuses
+32. Make "please log in or continue as a guest" for the "/" path
+34. Adjust the Input to styled
+36. Right a function to avoid the same project/ticket names

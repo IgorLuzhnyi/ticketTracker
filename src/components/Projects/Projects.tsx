@@ -1,12 +1,10 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import {
   Box,
-  Button,
   FormControl,
   Typography,
   Stack,
   Grid2 as Grid,
-  List,
   ListItem,
   ListItemButton,
   Divider,
@@ -21,6 +19,7 @@ import {
   confirmButtonStyling,
   declineButtonStyling,
 } from "../CustomButtons/CustomButton";
+import { CustomList } from "../CustomList/CustomList";
 import { useProjectsContext } from "../../contexts/projectsContext";
 import { useState, useEffect, MouseEvent } from "react";
 import { useForm } from "react-hook-form";
@@ -92,51 +91,36 @@ export function Projects() {
           sx={{
             ml: 2,
             mr: 2,
-            p: 2,
+            p: 1.5,
             pt: 3,
-            backgroundColor: "secondary.light",
+            backgroundColor: "info.main",
             borderRadius: ".5rem",
-            height: "600px",
+            height: "650px",
           }}
         >
           <Box
             sx={{
-              height: "90px",
+              minHeight: "90px",
               display: "block",
               position: "relative",
             }}
           >
-            {!projectInputIsOpen && (
-              <CustomButton
-                sx={{
-                  width: "250px",
-                  p: 1,
-                  position: "absolute",
-                  top: "30%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-                onClick={() => {
-                  setEditedProjectIndex(NaN);
-                  setProjectInputIsOpen(true);
+            {projectInputIsOpen ? (
+              <form
+                onSubmit={handleSubmit(submitNewProject)}
+                noValidate
+                autoComplete="off"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
                 }}
               >
-                Create new project
-              </CustomButton>
-            )}
-            <form
-              onSubmit={handleSubmit(submitNewProject)}
-              noValidate
-              autoComplete="off"
-              style={{ width: "100%" }}
-            >
-              <FormControl sx={{ width: "100%" }}>
-                {projectInputIsOpen && (
+                <FormControl sx={{ width: "95%" }}>
                   <CustomInput
                     autoFocus
                     variant="outlined"
                     id="new-project"
-                    // sx={{ maxWidth: "250px" }}
                     label="Name of the project"
                     {...register("projectName", {
                       required: {
@@ -150,108 +134,138 @@ export function Projects() {
                     })}
                     error={!!errors.projectName}
                   />
-                )}
-                <Typography variant="subtitle2" color="error">
-                  {projectInputIsOpen ? errors.projectName?.message : ""}
-                </Typography>
-              </FormControl>
-              {projectInputIsOpen && (
-                <Stack
-                  direction="row"
-                  sx={{ justifyContent: "space-between", width: "260px" }}
-                >
-                  <CustomButton
-                    type="submit"
-                    variant="contained"
-                    sx={{ ...confirmButtonStyling, width: "48%" }}
-                  >
-                    Submit
-                  </CustomButton>
-                  <CustomButton
-                    variant="contained"
-                    sx={{ ...declineButtonStyling, width: "48%" }}
-                    onClick={() => {
-                      reset();
-                      setProjectInputIsOpen(false);
+                  <Typography variant="subtitle2" color="error">
+                    {errors.projectName?.message}
+                  </Typography>
+                  <Stack
+                    direction="row"
+                    sx={{
+                      justifyContent: "space-between",
+                      gap: "10px",
+                      width: "100%",
                     }}
                   >
-                    Cancel
-                  </CustomButton>
-                </Stack>
-              )}
-            </form>
+                    <CustomButton
+                      type="submit"
+                      variant="contained"
+                      sx={{ ...confirmButtonStyling, flexGrow: 1 }}
+                    >
+                      Submit
+                    </CustomButton>
+                    <CustomButton
+                      variant="contained"
+                      sx={{ ...declineButtonStyling, flexGrow: 1 }}
+                      onClick={() => {
+                        reset();
+                        setProjectInputIsOpen(false);
+                      }}
+                    >
+                      Cancel
+                    </CustomButton>
+                  </Stack>
+                </FormControl>
+              </form>
+            ) : (
+              <CustomButton
+                sx={{
+                  width: "250px",
+                  p: 1,
+                  position: "absolute",
+                  top: "30%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  backgroundColor: "primary.main",
+                  color: "#fff",
+                }}
+                onClick={() => {
+                  setEditedProjectIndex(NaN);
+                  setProjectInputIsOpen(true);
+                }}
+              >
+                Create new project
+              </CustomButton>
+            )}
           </Box>
 
-          <Box sx={{ mt: 2, color: "secondary.dark" }}>
-            <Typography variant="h5">Current projects:</Typography>
-            <List sx={{ height: "50vh", overflowY: "auto" }}>
+          <Box sx={{ mt: 1, color: "secondary.dark" }}>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 2,
+                textAlign: "center",
+                fontWeight: "bold",
+                color: "secondary.dark",
+              }}
+            >
+              Current projects
+            </Typography>
+            <CustomList
+              sx={{
+                height: "50vh",
+              }}
+            >
               {projects.length ? (
                 projects.map((project, i) => (
                   <Box key={i}>
                     {editedProjectIndex === i ? (
-                      <Stack
-                        direction="row"
-                        sx={{ width: "100%", justifyContent: "space-between" }}
+                      <Box
+                        sx={{
+                          width: "100%",
+                          mt: 1,
+                          mb: 1,
+                          justifyContent: "center",
+                        }}
                       >
                         <form
                           onSubmit={handleSubmit(submitEditedProject)}
                           noValidate
                           autoComplete="off"
-                          style={{ width: "100%" }}
+                          style={{ width: "95%" }}
                         >
-                          <FormControl sx={{ mb: 2, width: "100%" }}>
-                            {editedProjectIndex >= 0 && (
-                              <CustomInput
-                                autoFocus
-                                variant="outlined"
-                                label="Name of the project"
-                                id="existing-project"
-                                defaultValue={
-                                  editedProjectIndex >= 0
-                                    ? projects[editedProjectIndex]?.projectName
-                                    : ""
-                                }
-                                sx={{ backgroundColor: "primary.light" }}
-                                {...register("projectName", {
-                                  required: {
-                                    value: true,
-                                    message: "Project name is required",
-                                  },
-                                  pattern: {
-                                    value: /^.{1,20}$/,
-                                    message: "20 characters max",
-                                  },
-                                })}
-                                error={!!errors.projectName}
-                              />
-                            )}
+                          <FormControl sx={{ width: "100%" }}>
+                            <CustomInput
+                              autoFocus
+                              variant="outlined"
+                              label="Name of the project"
+                              id="existing-project"
+                              defaultValue={
+                                editedProjectIndex >= 0
+                                  ? projects[editedProjectIndex]?.projectName
+                                  : ""
+                              }
+                              {...register("projectName", {
+                                required: {
+                                  value: true,
+                                  message: "Project name is required",
+                                },
+                                pattern: {
+                                  value: /^.{1,20}$/,
+                                  message: "20 characters max",
+                                },
+                              })}
+                              error={!!errors.projectName}
+                            />
                             <Typography variant="subtitle2" color="error">
-                              {editedProjectIndex >= 0
-                                ? errors.projectName?.message
-                                : ""}
+                              {errors.projectName?.message}
                             </Typography>
-                          </FormControl>
-                          {editedProjectIndex >= 0 && (
                             <Stack
                               direction="row"
                               sx={{ justifyContent: "space-between" }}
                             >
-                              <Button
+                              <CustomButton
                                 type="submit"
                                 variant="contained"
                                 sx={{
-                                  color: "secondary.main",
-                                  backgroundColor: "info.main",
+                                  ...confirmButtonStyling,
                                   width: "48%",
                                 }}
                               >
                                 Submit
-                              </Button>
-                              <Button
+                              </CustomButton>
+                              <CustomButton
                                 variant="contained"
                                 sx={{
-                                  color: "secondary.main",
-                                  backgroundColor: "red",
+                                  ...declineButtonStyling,
                                   width: "48%",
                                 }}
                                 onClick={() => {
@@ -260,14 +274,19 @@ export function Projects() {
                                 }}
                               >
                                 Cancel
-                              </Button>
+                              </CustomButton>
                             </Stack>
-                          )}
+                          </FormControl>
                         </form>
-                      </Stack>
+                      </Box>
                     ) : (
                       <ListItem
                         disablePadding
+                        className="project-list-item"
+                        sx={{
+                          mt: i === 0 ? 0 : 1,
+                          mb: i === projects.length - 1 ? 0 : 1,
+                        }}
                         onClick={() => {
                           setEditedProjectIndex(NaN);
                           setSelectedProjectIndex(i);
@@ -283,16 +302,19 @@ export function Projects() {
                                 backgroundColor: "primary.main",
                               },
                             },
-                            backgroundColor: "info.main",
-                            pt: 1,
-                            pb: 1,
+                            "&:hover": {
+                              backgroundColor: "secondary.light",
+                            },
                             justifyContent: "space-between",
                           }}
                         >
-                          <Typography>{project.projectName}</Typography>
-                          {/* </Link> */}
+                          <Typography sx={{ pl: 1 }}>
+                            {project.projectName}
+                          </Typography>
                           <Stack>
                             <IconButton
+                              className="project-list-item__edit-icon"
+                              size="small"
                               onClick={(event) => {
                                 handleClick(event, i);
                                 event.stopPropagation();
@@ -350,7 +372,7 @@ export function Projects() {
               ) : (
                 <Typography>No projects yet...</Typography>
               )}
-            </List>
+            </CustomList>
           </Box>
         </Box>
       </Grid>

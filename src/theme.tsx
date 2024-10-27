@@ -31,19 +31,18 @@ export const theme = createTheme({
   palette: {
     primary: {
       main: "#77D4FC",
-      light: "#80e5ff",
     },
     secondary: {
       main: "#aaadad",
-      light: "#F7F8FC",
-      dark: "#3a3a3b",
+      light: "#e4e4e4",
+      dark: "#4f4f50",
     },
     info: {
       main: "#F7F8FC",
-      light: "#FFFEFE",
     },
     success: {
-      main: "#2E7D32",
+      main: "#6dd680",
+      light: "#9fe0ab",
     },
   },
 });

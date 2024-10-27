@@ -4,11 +4,10 @@ import { SxProps, Theme } from "@mui/system";
 
 interface CustomButtonProps extends ButtonProps {
   sx?: SxProps<Theme>;
-  slotProps?: {};
 }
 
 export const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
-  ({ sx, children, slotProps, ...rest }, ref) => {
+  ({ sx, children, ...rest }, ref) => {
     return (
       <Button
         ref={ref}
@@ -44,7 +43,7 @@ export const confirmButtonStyling = {
 
 export const declineButtonStyling = {
   color: "secondary.main",
-  backgroundColor: "secondary.light",
+  backgroundColor: "info.main",
   borderColor: "secondary.main",
 
   "&.MuiButtonBase-root:hover": {

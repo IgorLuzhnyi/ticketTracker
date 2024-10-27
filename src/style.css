@@ -1,0 +1,8 @@
+.project-list-item__edit-icon {
+  visibility: hidden;
+}
+
+.project-list-item:hover .project-list-item__edit-icon,
+.project-list-item:focus-visible .project-list-item__edit-icon {
+  visibility: visible;
+}
