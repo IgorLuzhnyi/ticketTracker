@@ -1,23 +1,24 @@
 6. Make max number message of additional links
 7. Make "due dates"
 9. Add sorting functionality
-10. Add error page when there is no such projectId or ticketId in the path.
-12. Make sure to put z-index of buttons higher. When creating a new ticket and clicking "edit" button of the project, creating a ticket should close
-13. Change "active" style when clicking Edit/Remove button
+10. Add error page when there is no such projectId or ticketId in the path
 15. Check if can refine the form using useWatch - probably would be more neat for defaultValue inside the fields
 17. Make ticket links to actually transer
 18. Check if ticket link data id is redundant, remove if so
 19. Doesn't add space after ":" in Tickets - refine
 20. Spot already existing links
 21. Make links optional - but keep in mind that if a link is added, then linkName should be added too, and vice versa.
-22. fix problem with adding links and editing existing ones simultaneously
-23. Make custom buttons
-24. Make links optional
 25. There is a behavior when project is removed, but we are still on Ticket editing page with all the data
 26. When adding new link in editing ticket page, Typography with an error doesn't show up in ticket link field. Basically go over all error messages in links here
 28. Work on fields validation when adding links (existing ones are fine, maybe copy their setting). For some reason the form with new links submits, even though the field requirements are not met 
 29. Probably remove uuid, need to leave only useForm's ids created by default. Need to adjust link's type, probably set id as to an optional one or whatever
 31. Work on ticket statuses
 32. Make "please log in or continue as a guest" for the "/" path
-34. Adjust the Input to styled
-36. Right a function to avoid the same project/ticket names
+34. Adjust the Input and Button to styled
+36. Write a function to avoid the same project/ticket names
+37. Add a tooltip on the footer to explain the purpose of this app
+
+38. Work on the confirmation window
+39. Remove the bug with the confirmation window: when you click on the window, it selects the last project in the list
+
+40. Add the "Premium" feature

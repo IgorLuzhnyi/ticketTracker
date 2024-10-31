@@ -37,3 +37,10 @@ export type TicketHistoryPost = {
   message: string;
   author: string;
 };
+
+export interface ConfirmationWindowProps {
+  isOpen: boolean;
+  message: string;
+  onConfirm: () => void;
+  onDecline: () => void;
+}

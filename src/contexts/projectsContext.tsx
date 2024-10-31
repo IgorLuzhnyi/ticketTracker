@@ -7,8 +7,10 @@ import {
   Ticket,
   TicketLink,
   TicketHistoryPost,
+  ConfirmationWindowProps,
 } from "./types/types";
 import { TICKET_ATTRIBUTES, ticketActions } from "../constants/constants";
+import { defaultConfirmationWindowValues } from "../components/ConfirmationWindow/ConfirmationWindow";
 
 type ProjectsContext = {
   projects: Project[];
@@ -29,6 +31,8 @@ type ProjectsContext = {
   removeTicket: (projectId: string, ticketId: string) => void;
   selectedTicketIndex: number | null;
   setSelectedTicketIndex: (ticketIndex: number) => void;
+  confirmationWindowValues: ConfirmationWindowProps;
+  setConfirmationWindowValues: (object: ConfirmationWindowProps) => void;
 };
 
 const ProjectsContext = createContext({} as ProjectsContext);
@@ -50,6 +54,9 @@ export function ProjectsContextProvider({
   const [selectedTicketIndex, setSelectedTicketIndex] = useState<null | number>(
     null
   );
+
+  const [confirmationWindowValues, setConfirmationWindowValues] =
+    useState<ConfirmationWindowProps>(defaultConfirmationWindowValues);
 
   function getProject(projectId: string) {
     return projects.find(
@@ -239,6 +246,8 @@ export function ProjectsContextProvider({
         removeTicket,
         selectedTicketIndex,
         setSelectedTicketIndex,
+        confirmationWindowValues,
+        setConfirmationWindowValues,
       }}
     >
       {children}

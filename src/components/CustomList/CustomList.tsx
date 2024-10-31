@@ -1,7 +1,7 @@
 import { styled, List } from "@mui/material";
 import { theme } from "../../theme";
 
-export const CustomList = styled(List)({
+const CustomList = styled(List)({
   padding: "0 5px",
   overflow: "overlay",
 
@@ -22,3 +22,5 @@ export const CustomList = styled(List)({
     backgroundColor: `${theme.palette.info.main}`,
   },
 });
+
+export default CustomList;

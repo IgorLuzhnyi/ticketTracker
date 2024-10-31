@@ -2,7 +2,7 @@
 import {
   Box,
   Button,
-  Grid,
+  Grid2 as Grid,
   FormControl,
   Typography,
   Stack,
@@ -112,12 +112,7 @@ export function Tickets() {
               {newTicketInputIsOpen ? (
                 <Grid container>
                   <Grid
-                    item
-                    xl={4}
-                    lg={4}
-                    md={4}
-                    sm={4}
-                    xs={4}
+                    size={4}
                     sx={{
                       pl: 1,
                       pr: 1,
@@ -166,12 +161,7 @@ export function Tickets() {
                     </FormControl>
                   </Grid>
                   <Grid
-                    item
-                    xl={5}
-                    lg={5}
-                    md={5}
-                    sm={5}
-                    xs={5}
+                    size={5}
                     sx={{
                       pl: 1,
                       pr: 1,
@@ -259,12 +249,7 @@ export function Tickets() {
                     </Box>
                   </Grid>
                   <Grid
-                    item
-                    xl={2}
-                    lg={2}
-                    md={2}
-                    sm={2}
-                    xs={2}
+                    size={2}
                     sx={{
                       pl: 1,
                       pr: 1,

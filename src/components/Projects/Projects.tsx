@@ -19,7 +19,8 @@ import {
   confirmButtonStyling,
   declineButtonStyling,
 } from "../CustomButtons/CustomButton";
-import { CustomList } from "../CustomList/CustomList";
+import CustomList from "../CustomList/CustomList";
+import { defaultConfirmationWindowValues } from "../ConfirmationWindow/ConfirmationWindow";
 import { useProjectsContext } from "../../contexts/projectsContext";
 import { useState, useEffect, MouseEvent } from "react";
 import { useForm } from "react-hook-form";
@@ -36,6 +37,7 @@ export function Projects() {
     removeProject,
     selectedProjectIndex,
     setSelectedProjectIndex,
+    setConfirmationWindowValues,
   } = useProjectsContext();
 
   const [projectInputIsOpen, setProjectInputIsOpen] = useState<boolean>(false);
@@ -211,7 +213,7 @@ export function Projects() {
                       <Box
                         sx={{
                           width: "100%",
-                          mt: 1,
+                          mt: 2,
                           mb: 1,
                           justifyContent: "center",
                         }}
@@ -346,7 +348,16 @@ export function Projects() {
                                     handleClose();
                                     event.stopPropagation();
                                     setEditedProjectIndex(NaN);
-                                    removeProject(project.projectId);
+                                    setConfirmationWindowValues({
+                                      isOpen: true,
+                                      message: `Are you sure you want to delete project ${project.projectName}?`,
+                                      onConfirm: () =>
+                                        removeProject(project.projectId),
+                                      onDecline: () =>
+                                        setConfirmationWindowValues(
+                                          defaultConfirmationWindowValues
+                                        ),
+                                    });
                                   }}
                                 >
                                   <Typography>Delete</Typography>

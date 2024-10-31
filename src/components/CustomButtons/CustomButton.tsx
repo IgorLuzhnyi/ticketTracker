@@ -44,7 +44,7 @@ export const confirmButtonStyling = {
 export const declineButtonStyling = {
   color: "secondary.main",
   backgroundColor: "info.main",
-  borderColor: "secondary.main",
+  borderColor: "secondary.dark",
 
   "&.MuiButtonBase-root:hover": {
     backgroundColor: "secondary.main",
