@@ -15,14 +15,16 @@ export const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
         size="small"
         variant="outlined"
         sx={{
-          ...sx,
           mt: 1,
           mb: 1,
+          pl: 1,
+          pr: 1,
           "&:hover": {
             backgroundColor: "primary.main",
             borderColor: "primary.dark",
             color: "white",
           },
+          ...sx,
         }}
       >
         {children}
@@ -30,6 +32,18 @@ export const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
     );
   }
 );
+
+export const alternativeButtonStyling = {
+  color: "secondary.main",
+  backgroundColor: "info.main",
+  borderColor: "secondary.main",
+
+  "&:hover": {
+    color: "info.main",
+    backgroundColor: "secondary.main",
+    borderColor: "secondary.main",
+  },
+};
 
 export const confirmButtonStyling = {
   backgroundColor: "success.main",

@@ -26,7 +26,7 @@ const ConfirmationWindow = ({ ...props }) => {
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "rgba(10, 25, 47, 0.5)", // change later
+        backgroundColor: "rgba(10, 25, 47, 0.7)",
         zIndex: 9999999,
       }}
     >
@@ -42,14 +42,14 @@ const ConfirmationWindow = ({ ...props }) => {
           transform: "translate(-50%, -50%)",
           minHeight: "150px",
           width: "300px",
-          backgroundColor: "secondary.dark",
+          backgroundColor: "secondary.light",
           borderRadius: "10px",
         }}
       >
         <Typography sx={{ textAlign: "center" }}>{message}</Typography>
         <Stack
           direction="row"
-          sx={{ width: "200px", justifyContent: "space-between", gap: "20px" }}
+          sx={{ width: "250px", justifyContent: "space-between", gap: "20px" }}
         >
           <CustomButton
             onClick={() => {

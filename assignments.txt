@@ -17,8 +17,6 @@
 34. Adjust the Input and Button to styled
 36. Write a function to avoid the same project/ticket names
 37. Add a tooltip on the footer to explain the purpose of this app
-
-38. Work on the confirmation window
-39. Remove the bug with the confirmation window: when you click on the window, it selects the last project in the list
-
 40. Add the "Premium" feature
+41. Work on image optimization
+42. Swap Home and Main namings?

@@ -95,9 +95,9 @@ export function Projects() {
             mr: 2,
             p: 1.5,
             pt: 3,
+            pb: 3,
             backgroundColor: "info.main",
             borderRadius: ".5rem",
-            height: "650px",
           }}
         >
           <Box
@@ -394,7 +394,7 @@ export function Projects() {
             mr: 2,
             p: 2,
             borderRadius: ".5rem",
-            backgroundColor: "secondary.light",
+            backgroundColor: "info.main",
           }}
         >
           <Outlet />

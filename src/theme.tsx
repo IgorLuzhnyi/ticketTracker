@@ -17,7 +17,7 @@ export const theme = createTheme({
     h3: { fontSize: 26 },
     h4: { fontSize: 22 },
     h5: { fontSize: 18 },
-    h6: { fontSize: 14 },
+    h6: { fontSize: 12 },
   },
   components: {
     MuiTouchRipple: {

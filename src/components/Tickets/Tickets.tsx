@@ -12,6 +12,12 @@ import {
   Divider,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import {
+  CustomButton,
+  alternativeButtonStyling,
+  confirmButtonStyling,
+  declineButtonStyling,
+} from "../CustomButtons/CustomButton";
 import CustomInput from "../CustomInput/CustomInput";
 
 // types
@@ -31,6 +37,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // assets
 import noTicketsImg from "../../assets/notickets.jpg";
+import newTicket from "../../assets/newticket.jpg";
 
 // variables
 import { MAX_TICKET_LINKS } from "../../constants/constants";
@@ -100,8 +107,17 @@ export function Tickets() {
       {projects.length !== 0 ? (
         selectedProjectIndex !== null ? (
           <Box>
-            <Typography>
-              Project {projects[selectedProjectIndex].projectName}
+            <Typography sx={{ pb: 2 }}>
+              Project{" "}
+              <span
+                style={{
+                  padding: "5px 10px",
+                  backgroundColor: "#ffb84d",
+                  borderRadius: "5px",
+                }}
+              >
+                {projects[selectedProjectIndex].projectName}
+              </span>
             </Typography>
             <form
               onSubmit={handleSubmit(submitTicket)}
@@ -224,12 +240,12 @@ export function Tickets() {
                             </Typography>
                           </FormControl>
                           {index > 0 && (
-                            <Button
+                            <CustomButton
                               color="secondary"
                               onClick={() => remove(index)}
                             >
                               X
-                            </Button>
+                            </CustomButton>
                           )}
                         </Stack>
                       ))}
@@ -290,16 +306,13 @@ export function Tickets() {
                   </Grid>
                 </Grid>
               ) : (
-                <Button
+                <CustomButton
                   variant="contained"
                   onClick={() => setNewTicketInputIsOpen(true)}
-                  sx={{
-                    color: "secondary.main",
-                    backgroundColor: "info.main",
-                  }}
+                  sx={{ ...alternativeButtonStyling }}
                 >
                   Create new ticket
-                </Button>
+                </CustomButton>
               )}
             </form>
           </Box>
@@ -309,6 +322,7 @@ export function Tickets() {
       ) : (
         <Typography>Please create a project</Typography>
       )}
+
       <List>
         {selectedProjectIndex !== null ? (
           projects[selectedProjectIndex].tickets.length !== 0 ? (
@@ -326,37 +340,53 @@ export function Tickets() {
                         },
                       },
                       borderRadius: ".3rem",
-                      justifyContent: "space-between",
                       p: 0,
-                      position: "relative",
                     }}
                   >
                     <Link
                       to={`/projects/${projects[selectedProjectIndex].projectId}/tickets/${ticket.ticketId}`}
                       style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        position: "relative",
                         width: "100%",
                         height: "inherit",
-                        padding: "5px",
                         textDecoration: "none",
+                        padding: "5px 20px",
                       }}
                     >
-                      {ticket.ticketName}
+                      <Typography
+                        sx={{ flexGrow: 20, color: "secondary.dark" }}
+                      >
+                        {ticket.ticketName}
+                      </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{ flexGrow: 1.5, color: "secondary.dark" }}
+                      >
+                        Created on {ticket.createdAt}
+                      </Typography>
+                      <Button
+                        sx={{
+                          color: "black",
+                          backgroundColor: "secondary.main",
+                          flexGrow: 0.5,
+                          p: 0,
+                          m: 0,
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          removeTicket(
+                            projects[selectedProjectIndex].projectId,
+                            ticket.ticketId
+                          );
+                        }}
+                      >
+                        X
+                      </Button>
                     </Link>
-                    <Typography sx={{ position: "absolute", right: 0 }}>
-                      Created on {ticket.createdAt}
-                    </Typography>
                   </ListItemButton>
-                  <Button
-                    sx={{ color: "black" }}
-                    onClick={() =>
-                      removeTicket(
-                        projects[selectedProjectIndex].projectId,
-                        ticket.ticketId
-                      )
-                    }
-                  >
-                    X
-                  </Button>
                 </ListItem>
                 {i ===
                 projects[selectedProjectIndex].tickets.length - 1 ? null : (
@@ -378,12 +408,10 @@ export function Tickets() {
                 borderRadius: "3px",
               }}
               alt="no projects yet"
-              src={noTicketsImg}
+              src={newTicketInputIsOpen ? newTicket : noTicketsImg}
             />
           )
-        ) : (
-          <Typography>No projects yet</Typography>
-        )}
+        ) : null}
       </List>
     </Stack>
   );
