@@ -1,49 +1,23 @@
-import { TextField } from "@mui/material";
-import { TextFieldProps } from "@mui/material";
 import { forwardRef } from "react";
+import { TextField, TextFieldProps, styled } from "@mui/material";
 
-interface CustomInputProps {
-  label: string;
-  style?: object;
-  error?: boolean;
-}
-
-const CustomInput = forwardRef<
-  HTMLInputElement,
-  CustomInputProps & TextFieldProps
->((props, ref) => {
-  const { sx, ...rest } = props;
-
-  return (
-    <TextField
-      ref={ref}
-      {...rest}
-      size="small"
-      slotProps={{
-        inputLabel: {
-          sx: {
-            fontSize: "14px",
-          },
-        },
-      }}
-      sx={{
-        ...sx,
-        mb: 0.5,
-        borderRadius: "none",
-        "& .MuiOutlinedInput-root": {
-          "& fieldset": {
-            borderColor: "secondary.main",
-          },
-          "&:hover fieldset": {
-            borderColor: "primary.main",
-          },
-          "&.Mui-focused fieldset": {
-            borderColor: "primary.main",
-          },
-        },
-      }}
-    />
-  );
-});
+const CustomInput = styled(
+  forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => (
+    <TextField size="small" {...props} ref={ref} />
+  ))
+)(({ theme }) => ({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 0,
+    "& fieldset": {
+      borderColor: theme.palette.secondary.light,
+    },
+    "&:hover fieldset": {
+      borderColor: theme.palette.secondary.main,
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+}));
 
 export default CustomInput;

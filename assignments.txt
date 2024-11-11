@@ -20,3 +20,5 @@
 40. Add the "Premium" feature
 41. Work on image optimization
 42. Swap Home and Main namings?
+43. Change indexes to ids
+44. Tooltip for maximum links in Tickets

@@ -19,6 +19,8 @@ import {
   declineButtonStyling,
 } from "../CustomButtons/CustomButton";
 import CustomInput from "../CustomInput/CustomInput";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { defaultConfirmationWindowValues } from "../ConfirmationWindow/ConfirmationWindow";
 
 // types
 import { TicketInputValues } from "../../contexts/types/types";
@@ -50,6 +52,7 @@ export function Tickets() {
     setSelectedTicketIndex,
     addTicket,
     removeTicket,
+    setConfirmationWindowValues,
   } = useProjectsContext();
 
   // states
@@ -185,8 +188,17 @@ export function Tickets() {
                   >
                     <Box>
                       {fields.map((field, index) => (
-                        <Stack direction="row" key={field.id}>
-                          <FormControl>
+                        <Stack
+                          direction="row"
+                          sx={{
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: 1,
+                            mb: 2,
+                          }}
+                          key={field.id}
+                        >
+                          <FormControl sx={{ flexGrow: 8 }}>
                             <CustomInput
                               label="Related link *"
                               {...register(
@@ -213,7 +225,7 @@ export function Tickets() {
                                 : null}
                             </Typography>
                           </FormControl>
-                          <FormControl>
+                          <FormControl sx={{ flexGrow: 8 }}>
                             <CustomInput
                               variant="outlined"
                               label="Name of the service *"
@@ -239,17 +251,20 @@ export function Tickets() {
                                 : ""}
                             </Typography>
                           </FormControl>
-                          {index > 0 && (
-                            <CustomButton
-                              color="secondary"
-                              onClick={() => remove(index)}
-                            >
-                              X
-                            </CustomButton>
-                          )}
+                          <DeleteIcon
+                            sx={{
+                              color: "secondary.main",
+                              "&:hover": { color: "secondary.dark" },
+                              cursor: "pointer",
+                              visibility: index > 0 ? "visible" : "hidden",
+                              flexGrow: 1,
+                            }}
+                            onClick={() => remove(index)}
+                          />
                         </Stack>
                       ))}
-                      <Button
+                      <CustomButton
+                        sx={{ mt: 2 }}
                         color="secondary"
                         onClick={() =>
                           fields.length < MAX_TICKET_LINKS &&
@@ -261,47 +276,33 @@ export function Tickets() {
                         }
                       >
                         Add new ticket link
-                      </Button>
+                      </CustomButton>
                     </Box>
                   </Grid>
                   <Grid
-                    size={2}
+                    size={3}
                     sx={{
                       pl: 1,
                       pr: 1,
                       display: "flex",
+                      justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
                     <Stack direction="column" sx={{ width: "100%" }}>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{
-                          color: "secondary.main",
-                          backgroundColor: "info.main",
-                          width: "100%",
-                          mb: 2,
-                        }}
-                      >
+                      <CustomButton sx={confirmButtonStyling}>
                         Submit
-                      </Button>
-                      <Button
+                      </CustomButton>
+                      <CustomButton
                         variant="contained"
-                        sx={{
-                          color: "secondary.main",
-                          backgroundColor: "red",
-                          width: "100%",
-                          marginBottom: "auto",
-                          alignSelf: "flex-end",
-                        }}
+                        sx={declineButtonStyling}
                         onClick={() => {
                           reset();
                           setNewTicketInputIsOpen(false);
                         }}
                       >
                         Cancel
-                      </Button>
+                      </CustomButton>
                     </Stack>
                   </Grid>
                 </Grid>
@@ -332,7 +333,6 @@ export function Tickets() {
                   <ListItemButton
                     onClick={() => setSelectedTicketIndex(i)}
                     sx={{
-                      // backgroundColor: "secondary.main",
                       "&.Mui-selected": {
                         backgroundColor: "info.main",
                         "&:hover": {
@@ -367,24 +367,28 @@ export function Tickets() {
                       >
                         Created on {ticket.createdAt}
                       </Typography>
-                      <Button
+                      <DeleteIcon
                         sx={{
-                          color: "black",
-                          backgroundColor: "secondary.main",
-                          flexGrow: 0.5,
-                          p: 0,
-                          m: 0,
+                          color: "secondary.main",
+                          "&:hover": { color: "secondary.dark" },
                         }}
                         onClick={(e) => {
                           e.preventDefault();
-                          removeTicket(
-                            projects[selectedProjectIndex].projectId,
-                            ticket.ticketId
-                          );
+                          setConfirmationWindowValues({
+                            isOpen: true,
+                            message: `Are you sure you want to delete ticket ${projects[selectedProjectIndex].tickets[i].ticketName}?`,
+                            onConfirm: () =>
+                              removeTicket(
+                                projects[selectedProjectIndex].projectId,
+                                ticket.ticketId
+                              ),
+                            onDecline: () =>
+                              setConfirmationWindowValues(
+                                defaultConfirmationWindowValues
+                              ),
+                          });
                         }}
-                      >
-                        X
-                      </Button>
+                      />
                     </Link>
                   </ListItemButton>
                 </ListItem>
@@ -406,6 +410,8 @@ export function Tickets() {
               component="img"
               sx={{
                 borderRadius: "3px",
+                height: "200px",
+                width: "auto",
               }}
               alt="no projects yet"
               src={newTicketInputIsOpen ? newTicket : noTicketsImg}

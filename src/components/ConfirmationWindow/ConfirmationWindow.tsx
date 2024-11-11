@@ -44,6 +44,7 @@ const ConfirmationWindow = ({ ...props }) => {
           width: "300px",
           backgroundColor: "secondary.light",
           borderRadius: "10px",
+          p: 1,
         }}
       >
         <Typography sx={{ textAlign: "center" }}>{message}</Typography>
