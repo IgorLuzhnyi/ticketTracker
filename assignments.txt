@@ -22,3 +22,5 @@
 42. Swap Home and Main namings?
 43. Change indexes to ids
 44. Tooltip for maximum links in Tickets
+45. Move from local storage to json server
+46. Make responsive

@@ -1,7 +1,6 @@
 // components
 import {
   Box,
-  Button,
   Grid2 as Grid,
   FormControl,
   Typography,
@@ -290,7 +289,7 @@ export function Tickets() {
                     }}
                   >
                     <Stack direction="column" sx={{ width: "100%" }}>
-                      <CustomButton sx={confirmButtonStyling}>
+                      <CustomButton type="submit" sx={confirmButtonStyling}>
                         Submit
                       </CustomButton>
                       <CustomButton

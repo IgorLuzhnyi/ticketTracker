@@ -7,6 +7,7 @@ import {
   Stack,
   List,
   Link as MUILink,
+  Divider,
 } from "@mui/material";
 import CustomInput from "../CustomInput/CustomInput";
 import { Link } from "react-router-dom";
@@ -112,8 +113,8 @@ export function Ticket() {
       <Typography sx={{ p: 2 }}>
         Project {currentProject?.projectName}
       </Typography>
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
-        <Box>
+      <Stack direction="row">
+        <Box sx={{ mr: 4 }}>
           <Box
             sx={{
               display: "flex",
@@ -297,8 +298,10 @@ export function Ticket() {
           </Box>
         </Box>
 
+        <Divider orientation="vertical" flexItem />
+
         {/* SECTION WITH LINKS */}
-        <Box sx={{ backgroundColor: "#89e8a2" }}>
+        <Box sx={{ ml: 4, p: 2 }}>
           <List>
             {currentTicket?.ticketLinks.map((linkData, index) => {
               if (
