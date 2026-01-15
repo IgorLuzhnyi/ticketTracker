@@ -33,6 +33,7 @@ import { isURL } from "../../helperFunctions/isUrl";
 
 // libraries
 import { v4 as uuidv4 } from "uuid";
+import { theme } from "../../theme";
 
 export function Ticket() {
   // variables
@@ -114,7 +115,7 @@ export function Ticket() {
         Project {currentProject?.projectName}
       </Typography>
       <Stack direction="row">
-        <Box sx={{ mr: 4 }}>
+        <Box sx={{ mr: 4, minWidth: "400px" }}>
           <Box
             sx={{
               display: "flex",
@@ -301,7 +302,8 @@ export function Ticket() {
         <Divider orientation="vertical" flexItem />
 
         {/* SECTION WITH LINKS */}
-        <Box sx={{ ml: 4, p: 2 }}>
+        <Box sx={{ ml: 4, pr: 2, width: "100%" }}>
+          <Typography variant="h4">Related links:</Typography>
           <List>
             {currentTicket?.ticketLinks.map((linkData, index) => {
               if (
@@ -316,17 +318,22 @@ export function Ticket() {
                       autoComplete="off"
                       style={{ width: "100%" }}
                     >
-                      <Stack direction="row">
+                      <Stack
+                        direction="row"
+                        sx={{
+                          mt: 1,
+                          mb: 1,
+                        }}
+                      >
                         <FormControl>
                           <CustomInput
+                            autoFocus
                             variant="outlined"
+                            sx={{ mr: 2 }}
                             defaultValue={
                               currentTicket?.ticketLinks[index].linkName
                             }
                             label="Name of the service *"
-                            sx={{
-                              backgroundColor: "primary.light",
-                            }}
                             {...register(
                               `ticketLinks.${index}.linkName` as const,
                               {
@@ -350,6 +357,7 @@ export function Ticket() {
                         </FormControl>
                         <FormControl>
                           <CustomInput
+                            sx={{ mr: 2 }}
                             defaultValue={
                               currentTicket?.ticketLinks[index].link
                             }
@@ -374,7 +382,7 @@ export function Ticket() {
                               : null}
                           </Typography>
                         </FormControl>
-                        <Stack direction="row" sx={{ width: "100%" }}>
+                        <Stack direction="row">
                           <Button
                             type="submit"
                             variant="contained"
@@ -402,72 +410,87 @@ export function Ticket() {
                           </Button>
                         </Stack>
                       </Stack>
+                      <Divider sx={{ mt: 1, mb: 1 }} />
                     </form>
                   </Stack>
                 );
               } else {
                 return (
-                  <Stack direction="row" key={index}>
-                    <Typography>
-                      {linkData.linkName}: {/* space isn't added */}
-                    </Typography>
-                    <MUILink sx={{ cursor: "pointer", color: "black" }}>
-                      {linkData.link}
-                    </MUILink>
-                    <Button
-                      sx={{ color: "black" }}
-                      onClick={() => {
-                        replace([]);
-                        setEditingAction(ticketActions.editingLink);
-                        setCurrentlyEditing(linkData.id);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      sx={{ color: "black" }}
-                      onClick={() => {
-                        setEditingAction(ticketActions.removingLink);
-                        setCurrentlyEditing(linkData.id);
-                        setConfirmationWindowIsOpen(true);
-                      }}
-                    >
-                      Remove
-                    </Button>
-                    {/* confirmation window */}
-                    <Stack>
-                      {confirmationWindowIsOpen &&
-                      linkData.id === currentlyEditing ? (
-                        <Stack>
-                          <Typography>
-                            Are you sure you want to delete this link?
-                          </Typography>
-                          <Button
-                            onClick={() => {
-                              if (projectId && ticketId)
-                                updateTicket(
-                                  editingAction,
-                                  projectId,
-                                  ticketId,
-                                  currentlyEditing,
-                                  {}
-                                );
-                            }}
-                          >
-                            Yes
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              resetEditingData();
-                              setConfirmationWindowIsOpen(false);
-                            }}
-                          >
-                            No
-                          </Button>
-                        </Stack>
-                      ) : null}
+                  <Box key={index}>
+                    <Stack direction="row" sx={{ alignItems: "center" }}>
+                      <Typography sx={{ flex: 2 }}>
+                        {linkData.linkName}:&nbsp;
+                      </Typography>
+                      <MUILink
+                        sx={{
+                          flex: 8,
+                          cursor: "pointer",
+                          color: "black",
+                          textDecoration: "none",
+                          fontFamily: theme.typography.fontFamily,
+                          fontSize: theme.typography.h5.fontSize,
+                        }}
+                      >
+                        {linkData.link}
+                      </MUILink>
+                      <Stack direction="row" sx={{ flex: 2 }}>
+                        <Button
+                          sx={{ color: "black" }}
+                          onClick={() => {
+                            replace([]);
+                            setEditingAction(ticketActions.editingLink);
+                            setCurrentlyEditing(linkData.id);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          sx={{ color: "black" }}
+                          onClick={() => {
+                            setEditingAction(ticketActions.removingLink);
+                            setCurrentlyEditing(linkData.id);
+                            setConfirmationWindowIsOpen(true);
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </Stack>
+                      {/* confirmation window */}
+                      <Stack>
+                        {confirmationWindowIsOpen &&
+                        linkData.id === currentlyEditing ? (
+                          <Stack>
+                            <Typography>
+                              Are you sure you want to delete this link?
+                            </Typography>
+                            <Button
+                              onClick={() => {
+                                if (projectId && ticketId)
+                                  updateTicket(
+                                    editingAction,
+                                    projectId,
+                                    ticketId,
+                                    currentlyEditing,
+                                    {}
+                                  );
+                              }}
+                            >
+                              Yes
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                resetEditingData();
+                                setConfirmationWindowIsOpen(false);
+                              }}
+                            >
+                              No
+                            </Button>
+                          </Stack>
+                        ) : null}
+                      </Stack>
                     </Stack>
-                  </Stack>
+                    <Divider sx={{ mt: 1, mb: 1 }} />
+                  </Box>
                 );
               }
             })}
