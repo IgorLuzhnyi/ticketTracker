@@ -5,35 +5,28 @@ import {
   FormControl,
   Typography,
   Stack,
-  List,
-  Link as MUILink,
   Divider,
 } from "@mui/material";
 import CustomInput from "../CustomInput/CustomInput";
 import { Link } from "react-router-dom";
 
+import TicketLinksSection from "./TicketLinksSection";
+
 // types
 import { TicketInputValues } from "../../contexts/types/types";
+import {
+  TicketLinksEditingAction,
+  TicketLinksCurrentlyEditing,
+} from "./types/types";
 
 // hooks
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useProjectsContext } from "../../contexts/projectsContext";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 // variables
-import {
-  TICKET_ATTRIBUTES,
-  MAX_TICKET_LINKS,
-  ticketActions,
-} from "../../constants/constants";
-
-// helper functions
-import { isURL } from "../../helperFunctions/isUrl";
-
-// libraries
-import { v4 as uuidv4 } from "uuid";
-import { theme } from "../../theme";
+import { TICKET_ATTRIBUTES, ticketActions } from "../../constants/constants";
 
 export function Ticket() {
   // variables
@@ -51,10 +44,10 @@ export function Ticket() {
   );
 
   // states
-  const [editingAction, setEditingAction] = useState<string | null>(null);
-  const [currentlyEditing, setCurrentlyEditing] = useState<string | null>(null);
-  const [confirmationWindowIsOpen, setConfirmationWindowIsOpen] =
-    useState<boolean>(false);
+  const [editingAction, setEditingAction] =
+    useState<TicketLinksEditingAction>(null);
+  const [currentlyEditing, setCurrentlyEditing] =
+    useState<TicketLinksCurrentlyEditing>(null);
 
   const resetEditingData = () => {
     setEditingAction(null);
@@ -64,18 +57,13 @@ export function Ticket() {
   // form setup
   const ticketForm = useForm<TicketInputValues>({});
 
-  const { register, handleSubmit, reset, formState, control } = ticketForm;
+  const { register, handleSubmit, reset, formState } = ticketForm;
   const { isSubmitSuccessful, errors } = formState;
-
-  const { fields, append, remove, replace } = useFieldArray({
-    name: "ticketLinks",
-    control,
-  });
 
   const updateTicketWithMutableData = (data: TicketInputValues) => {
     const currentTicketLinkId = data.ticketLinks ? currentlyEditing : null;
 
-    // console.log(data);
+    console.log(data);
 
     if (projectId && ticketId)
       updateTicket(
@@ -92,19 +80,12 @@ export function Ticket() {
       console.log("form was submitted successfully");
       reset();
       resetEditingData();
-      if (fields.length > 0) fields.length = 0;
     }
   }, [isSubmitSuccessful, reset]);
 
   useEffect(() => {
     reset();
   }, [selectedProjectIndex, currentlyEditing]);
-
-  useEffect(() => {
-    editingAction !== ticketActions.addingLink ||
-      editingAction !== ticketActions.editingLink;
-    fields.length = 0;
-  }, [editingAction]);
 
   // console.log(currentTicket);
 
@@ -301,310 +282,18 @@ export function Ticket() {
 
         <Divider orientation="vertical" flexItem />
 
-        {/* SECTION WITH LINKS */}
-        <Box sx={{ ml: 4, pr: 2, width: "100%" }}>
-          <Typography variant="h4">Related links:</Typography>
-          <List>
-            {currentTicket?.ticketLinks.map((linkData, index) => {
-              if (
-                currentlyEditing === linkData.id &&
-                editingAction === ticketActions.editingLink
-              ) {
-                return (
-                  <Stack direction="row" key={index}>
-                    <form
-                      onSubmit={handleSubmit(updateTicketWithMutableData)}
-                      noValidate
-                      autoComplete="off"
-                      style={{ width: "100%" }}
-                    >
-                      <Stack
-                        direction="row"
-                        sx={{
-                          mt: 1,
-                          mb: 1,
-                        }}
-                      >
-                        <FormControl>
-                          <CustomInput
-                            autoFocus
-                            variant="outlined"
-                            sx={{ mr: 2 }}
-                            defaultValue={
-                              currentTicket?.ticketLinks[index].linkName
-                            }
-                            label="Name of the service *"
-                            {...register(
-                              `ticketLinks.${index}.linkName` as const,
-                              {
-                                pattern: {
-                                  value: /^.{1,30}$/,
-                                  message: "30 characters max",
-                                },
-                                required: true,
-                              }
-                            )}
-                            error={
-                              !!errors.ticketLinks &&
-                              !!errors.ticketLinks[index]?.linkName
-                            }
-                          />
-                          <Typography variant="subtitle2" color="error">
-                            {currentlyEditing && errors.ticketLinks
-                              ? errors.ticketLinks[index]?.linkName?.message
-                              : ""}
-                          </Typography>
-                        </FormControl>
-                        <FormControl>
-                          <CustomInput
-                            sx={{ mr: 2 }}
-                            defaultValue={
-                              currentTicket?.ticketLinks[index].link
-                            }
-                            label="Related link *"
-                            {...register(`ticketLinks.${index}.link` as const, {
-                              pattern: {
-                                value: /^.{1,100}$/,
-                                message: "100 characters max",
-                              },
-                              validate: (fieldValue) =>
-                                isURL(fieldValue) || "You must enter a link",
-                              required: true,
-                            })}
-                            error={
-                              !!errors.ticketLinks &&
-                              !!errors.ticketLinks[index]?.link
-                            }
-                          />
-                          <Typography variant="subtitle2" color="error">
-                            {currentlyEditing && errors.ticketLinks
-                              ? errors.ticketLinks[index]?.link?.message
-                              : null}
-                          </Typography>
-                        </FormControl>
-                        <Stack direction="row">
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{
-                              color: "secondary.main",
-                              backgroundColor: "info.main",
-                              mb: 2,
-                            }}
-                          >
-                            Submit
-                          </Button>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              color: "secondary.main",
-                              backgroundColor: "red",
-                              mb: 2,
-                            }}
-                            onClick={() => {
-                              reset();
-                              setCurrentlyEditing(null);
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                        </Stack>
-                      </Stack>
-                      <Divider sx={{ mt: 1, mb: 1 }} />
-                    </form>
-                  </Stack>
-                );
-              } else {
-                return (
-                  <Box key={index}>
-                    <Stack direction="row" sx={{ alignItems: "center" }}>
-                      <Typography sx={{ flex: 2 }}>
-                        {linkData.linkName}:&nbsp;
-                      </Typography>
-                      <MUILink
-                        sx={{
-                          flex: 8,
-                          cursor: "pointer",
-                          color: "black",
-                          textDecoration: "none",
-                          fontFamily: theme.typography.fontFamily,
-                          fontSize: theme.typography.h5.fontSize,
-                        }}
-                      >
-                        {linkData.link}
-                      </MUILink>
-                      <Stack direction="row" sx={{ flex: 2 }}>
-                        <Button
-                          sx={{ color: "black" }}
-                          onClick={() => {
-                            replace([]);
-                            setEditingAction(ticketActions.editingLink);
-                            setCurrentlyEditing(linkData.id);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          sx={{ color: "black" }}
-                          onClick={() => {
-                            setEditingAction(ticketActions.removingLink);
-                            setCurrentlyEditing(linkData.id);
-                            setConfirmationWindowIsOpen(true);
-                          }}
-                        >
-                          Remove
-                        </Button>
-                      </Stack>
-                      {/* confirmation window */}
-                      <Stack>
-                        {confirmationWindowIsOpen &&
-                        linkData.id === currentlyEditing ? (
-                          <Stack>
-                            <Typography>
-                              Are you sure you want to delete this link?
-                            </Typography>
-                            <Button
-                              onClick={() => {
-                                if (projectId && ticketId)
-                                  updateTicket(
-                                    editingAction,
-                                    projectId,
-                                    ticketId,
-                                    currentlyEditing,
-                                    {}
-                                  );
-                              }}
-                            >
-                              Yes
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                resetEditingData();
-                                setConfirmationWindowIsOpen(false);
-                              }}
-                            >
-                              No
-                            </Button>
-                          </Stack>
-                        ) : null}
-                      </Stack>
-                    </Stack>
-                    <Divider sx={{ mt: 1, mb: 1 }} />
-                  </Box>
-                );
-              }
-            })}
-          </List>
-
-          {/* section with NEW links */}
-          <Box>
-            <form
-              onSubmit={handleSubmit(updateTicketWithMutableData)}
-              noValidate
-              autoComplete="off"
-              style={{ width: "100%" }}
-            >
-              <List>
-                {fields.map((field, index) => (
-                  <Stack direction="row" key={field.id}>
-                    <Stack direction="row">
-                      <FormControl>
-                        <CustomInput
-                          variant="outlined"
-                          label="Name of the service *"
-                          sx={{
-                            backgroundColor: "primary.light",
-                          }}
-                          {...register(
-                            `ticketLinks.${index}.linkName` as const,
-                            {
-                              pattern: {
-                                value: /^.{1,30}$/,
-                                message: "30 characters max",
-                              },
-                              // validate: (fieldValue) =>
-                              //   !fieldValue && "Cannot be empty",
-                              required: true,
-                            }
-                          )}
-                          error={
-                            !!errors.ticketLinks &&
-                            !!errors.ticketLinks[index]?.linkName
-                          }
-                        />
-                        <Typography variant="subtitle2" color="error">
-                          {errors.ticketLinks
-                            ? errors.ticketLinks[index]?.linkName?.message
-                            : null}
-                        </Typography>
-                      </FormControl>
-                      <FormControl>
-                        <CustomInput
-                          label="Related link *"
-                          {...register(`ticketLinks.${index}.link` as const, {
-                            pattern: {
-                              value: /^.{1,200}$/,
-                              message: "200 characters max",
-                            },
-                            validate: (fieldValue) =>
-                              isURL(fieldValue) || "You must enter a link",
-                            required: true,
-                          })}
-                          error={
-                            !!errors.ticketLinks &&
-                            !!errors.ticketLinks[index]?.link
-                          }
-                        />
-                        <Typography variant="subtitle2" color="error">
-                          {errors.ticketLinks
-                            ? errors.ticketLinks[index]?.link?.message
-                            : null}
-                        </Typography>
-                      </FormControl>
-                      <Button color="secondary" onClick={() => remove(index)}>
-                        X
-                      </Button>
-                    </Stack>
-                  </Stack>
-                ))}
-              </List>
-              {fields.length > 0 && (
-                <Stack direction="row">
-                  <Button type="submit">Submit</Button>
-                </Stack>
-              )}
-            </form>
-            <Button
-              color="secondary"
-              disabled={
-                currentTicket?.ticketLinks.length &&
-                currentTicket?.ticketLinks.length + fields.length ===
-                  MAX_TICKET_LINKS
-                  ? true
-                  : false
-              }
-              onClick={() => {
-                if (editingAction !== ticketActions.editingLink) {
-                  setEditingAction(ticketActions.addingLink);
-                } else {
-                  setEditingAction(ticketActions.addingLink);
-                  reset({ ticketLinks: [] }); // this line causes issue. probably refine updateWithMutable
-                }
-                append({
-                  link: "",
-                  linkName: "",
-                  id: uuidv4(),
-                });
-              }}
-            >
-              {currentTicket?.ticketLinks.length &&
-              currentTicket?.ticketLinks.length + fields.length ===
-                MAX_TICKET_LINKS
-                ? `Max links number is ${MAX_TICKET_LINKS}`
-                : "Add new ticket link"}
-            </Button>
-          </Box>
-        </Box>
+        <TicketLinksSection
+          ticket={currentTicket}
+          projectId={projectId}
+          ticketId={ticketId}
+          form={ticketForm}
+          editingAction={editingAction}
+          currentlyEditing={currentlyEditing}
+          updateTicketWithMutableData={updateTicketWithMutableData}
+          setEditingAction={setEditingAction}
+          setCurrentlyEditing={setCurrentlyEditing}
+          resetEditingData={resetEditingData}
+        />
       </Stack>
       <Typography sx={{ p: 2 }}>
         History {currentTicket?.ticketHistory.map((post) => post.message)}

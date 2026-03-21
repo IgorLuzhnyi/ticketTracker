@@ -5,8 +5,6 @@ import {
   ProjectsContextProviderProps,
   Project,
   Ticket,
-  TicketLink,
-  TicketHistoryPost,
   ConfirmationWindowProps,
 } from "./types/types";
 import { TICKET_ATTRIBUTES, ticketActions } from "../constants/constants";
