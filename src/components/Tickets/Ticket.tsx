@@ -63,7 +63,7 @@ export function Ticket() {
   const updateTicketWithMutableData = (data: TicketInputValues) => {
     const currentTicketLinkId = data.ticketLinks ? currentlyEditing : null;
 
-    console.log(data);
+    // console.log(data);
 
     if (projectId && ticketId)
       updateTicket(

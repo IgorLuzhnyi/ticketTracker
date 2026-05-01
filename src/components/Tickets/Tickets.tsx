@@ -199,6 +199,32 @@ export function Tickets() {
                         >
                           <FormControl sx={{ flexGrow: 8 }}>
                             <CustomInput
+                              variant="outlined"
+                              label="Name of the service *"
+                              {...register(
+                                `ticketLinks.${index}.linkName` as const,
+                                {
+                                  pattern: {
+                                    value: /^.{1,30}$/,
+                                    message: "30 characters max",
+                                  },
+                                  required: true,
+                                }
+                              )}
+                              error={
+                                // this doesn't work, verify - 2 places
+                                !!errors.ticketLinks &&
+                                !!errors.ticketLinks[index]?.linkName
+                              }
+                            />
+                            <Typography variant="subtitle2" color="error">
+                              {newTicketInputIsOpen && errors.ticketLinks
+                                ? errors.ticketLinks[index]?.linkName?.message
+                                : ""}
+                            </Typography>
+                          </FormControl>
+                          <FormControl sx={{ flexGrow: 8 }}>
+                            <CustomInput
                               label="Related link *"
                               {...register(
                                 `ticketLinks.${index}.link` as const,
@@ -222,32 +248,6 @@ export function Tickets() {
                               {newTicketInputIsOpen && errors.ticketLinks
                                 ? errors.ticketLinks[index]?.link?.message
                                 : null}
-                            </Typography>
-                          </FormControl>
-                          <FormControl sx={{ flexGrow: 8 }}>
-                            <CustomInput
-                              variant="outlined"
-                              label="Name of the service *"
-                              {...register(
-                                `ticketLinks.${index}.linkName` as const,
-                                {
-                                  pattern: {
-                                    value: /^.{1,30}$/,
-                                    message: "30 characters max",
-                                  },
-                                  required: true,
-                                }
-                              )}
-                              error={
-                                // this doesn't work, verify - 2 places
-                                !!errors.ticketLinks &&
-                                !!errors.ticketLinks[index]?.linkName
-                              }
-                            />
-                            <Typography variant="subtitle2" color="error">
-                              {newTicketInputIsOpen && errors.ticketLinks
-                                ? errors.ticketLinks[index]?.linkName?.message
-                                : ""}
                             </Typography>
                           </FormControl>
                           <DeleteIcon

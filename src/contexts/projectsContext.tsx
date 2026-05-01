@@ -159,15 +159,18 @@ export function ProjectsContextProvider({
         break;
 
       case ticketActions.editingLink:
-        const editedLink = Object.entries(data).find(
-          (ticketParameter) =>
-            ticketParameter[0] === TICKET_ATTRIBUTES.ticketLinks
-        )?.[1][0];
+        const editedLink = Object.entries(data)
+          .find(
+            (ticketParameter) =>
+              ticketParameter[0] === TICKET_ATTRIBUTES.ticketLinks
+          )?.[1]
+          .filter((obj: object) => Object.keys(obj).length > 0)[0];
 
         const updatedTicketLinkData = {
           ...editedLink,
           id: currentTicketLinkId,
         };
+
         updatedTicket = {
           ...currentTicket,
           ticketLinks: projects[editedProjectIndex].tickets[
