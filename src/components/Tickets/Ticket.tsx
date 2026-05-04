@@ -10,6 +10,7 @@ import {
 import CustomInput from "../CustomInput/CustomInput";
 import { Link } from "react-router-dom";
 
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import TicketLinksSection from "./TicketLinksSection";
 
 // types
@@ -27,6 +28,10 @@ import { useForm } from "react-hook-form";
 
 // variables
 import { TICKET_ATTRIBUTES, ticketActions } from "../../constants/constants";
+import {
+  alternativeButtonStyling,
+  CustomButton,
+} from "../CustomButtons/CustomButton";
 
 export function Ticket() {
   // variables
@@ -63,8 +68,6 @@ export function Ticket() {
   const updateTicketWithMutableData = (data: TicketInputValues) => {
     const currentTicketLinkId = data.ticketLinks ? currentlyEditing : null;
 
-    // console.log(data);
-
     if (projectId && ticketId)
       updateTicket(
         editingAction,
@@ -87,21 +90,43 @@ export function Ticket() {
     reset();
   }, [selectedProjectIndex, currentlyEditing]);
 
-  // console.log(currentTicket);
-
   return (
     <Box>
-      <Link to={`/projects/${projectId}/tickets`}>Back to main</Link>
-      <Typography sx={{ p: 2 }}>
-        Project {currentProject?.projectName}
+      <Link
+        to={`/projects/${projectId}/tickets`}
+        style={{
+          textDecoration: "none",
+          display: "flex",
+          alignItems: "center",
+          color: "#4f4f50",
+        }}
+      >
+        <KeyboardBackspaceIcon />
+        &nbsp;
+        <Typography>Back to all tickets</Typography>
+      </Link>
+      <Typography variant="h4" sx={{ my: 2, fontWeight: "bold" }}>
+        Project{" "}
+        <span
+          style={{
+            padding: "5px 10px",
+            backgroundColor: "#ffb84d",
+            borderRadius: "5px",
+          }}
+        >
+          {currentProject?.projectName}
+        </span>
       </Typography>
-      <Stack direction="row">
-        <Box sx={{ mr: 4, minWidth: "400px" }}>
+      <Divider sx={{ my: 1, borderWidth: 0.5 }} />
+      <Stack
+        direction="row"
+        sx={{ display: "flex", justifyContent: "space-around" }}
+      >
+        <Box sx={{ flex: 4, pr: 2 }}>
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              maxWidth: "400px",
             }}
           >
             {currentlyEditing === TICKET_ATTRIBUTES.ticketName ? (
@@ -177,31 +202,39 @@ export function Ticket() {
                 </Box>
               </form>
             ) : (
-              <Stack direction="row">
-                <Typography sx={{ p: 2 }}>
+              <Stack
+                direction="row"
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <Typography>
                   <Typography component="span" sx={{ fontWeight: "bold" }}>
-                    Ticket Name
+                    Ticket Name:
                   </Typography>{" "}
                   {currentTicket?.ticketName}
                 </Typography>
-                <Button
-                  sx={{
-                    color: "black",
-                    backgroundColor: "secondary.light",
-                  }}
+                <CustomButton
+                  sx={{ ...alternativeButtonStyling, py: 0 }}
                   onClick={() => {
                     setEditingAction(ticketActions.editingTicketName);
                     setCurrentlyEditing(TICKET_ATTRIBUTES.ticketName);
                   }}
                 >
                   Edit
-                </Button>
+                </CustomButton>
               </Stack>
             )}
           </Box>
-          <Typography sx={{ p: 2 }}>
+          <Divider sx={{ my: 1 }} />
+          <Typography variant="h6">
             Created at {currentTicket?.createdAt}
           </Typography>
+          <Divider sx={{ my: 1 }} />
           <Box>
             {currentlyEditing === TICKET_ATTRIBUTES.ticketDescription ? (
               <form
@@ -259,43 +292,60 @@ export function Ticket() {
                 </Stack>
               </form>
             ) : (
-              <Stack direction="row">
-                <Typography sx={{ p: 2 }}>
-                  Description: {currentTicket?.ticketDescription}
-                </Typography>
-                <Button
+              <Box>
+                <Stack
+                  direction="row"
                   sx={{
-                    color: "black",
-                    backgroundColor: "secondary.light",
-                  }}
-                  onClick={() => {
-                    setEditingAction(ticketActions.editingTicketDescription);
-                    setCurrentlyEditing(TICKET_ATTRIBUTES.ticketDescription);
+                    width: "100%",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 2,
                   }}
                 >
-                  Edit
-                </Button>
-              </Stack>
+                  <Typography>Description:</Typography>
+                  <CustomButton
+                    sx={{ ...alternativeButtonStyling, py: 0, flexShrink: 0 }}
+                    onClick={() => {
+                      setEditingAction(ticketActions.editingTicketDescription);
+                      setCurrentlyEditing(TICKET_ATTRIBUTES.ticketDescription);
+                    }}
+                  >
+                    Edit
+                  </CustomButton>
+                </Stack>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    flex: 1,
+                    wordBreak: "break-word",
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {currentTicket?.ticketDescription}
+                </Typography>
+              </Box>
             )}
           </Box>
         </Box>
 
         <Divider orientation="vertical" flexItem />
 
-        <TicketLinksSection
-          ticket={currentTicket}
-          projectId={projectId}
-          ticketId={ticketId}
-          form={ticketForm}
-          editingAction={editingAction}
-          currentlyEditing={currentlyEditing}
-          updateTicketWithMutableData={updateTicketWithMutableData}
-          setEditingAction={setEditingAction}
-          setCurrentlyEditing={setCurrentlyEditing}
-          resetEditingData={resetEditingData}
-        />
+        <Box sx={{ flex: 8 }}>
+          <TicketLinksSection
+            ticket={currentTicket}
+            projectId={projectId}
+            ticketId={ticketId}
+            form={ticketForm}
+            editingAction={editingAction}
+            currentlyEditing={currentlyEditing}
+            updateTicketWithMutableData={updateTicketWithMutableData}
+            setEditingAction={setEditingAction}
+            setCurrentlyEditing={setCurrentlyEditing}
+            resetEditingData={resetEditingData}
+          />
+        </Box>
       </Stack>
-      <Typography sx={{ p: 2 }}>
+      <Typography>
         History {currentTicket?.ticketHistory.map((post) => post.message)}
       </Typography>
     </Box>

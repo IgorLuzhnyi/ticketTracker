@@ -70,7 +70,7 @@ const TicketLinksSection = ({
   });
 
   return (
-    <Box sx={{ ml: 4, pr: 2, width: "100%" }}>
+    <Box sx={{ mt: 1, pl: 2 }}>
       <Typography variant="h4">Related links:</Typography>
       <List>
         {currentTicket?.ticketLinks.map((linkData, index) => {

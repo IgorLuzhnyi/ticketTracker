@@ -25,3 +25,4 @@
 45. Move from local storage to json server
 46. Make responsive
 47. Write a separate function in the context for updating ticket links based on ticket id
+48. Description text must not overlap the button
