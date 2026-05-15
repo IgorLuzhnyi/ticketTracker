@@ -21,7 +21,7 @@ import {
 
 // hooks
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useProjectsContext } from "../../contexts/projectsContext";
 import { useForm } from "react-hook-form";
 
@@ -34,6 +34,7 @@ export function Ticket() {
     ticketId: string;
     projectId: string;
   }>();
+  const navigate = useNavigate();
   const { projects, selectedProjectIndex, updateTicket } = useProjectsContext();
 
   const currentProject = projects.find(
@@ -74,6 +75,17 @@ export function Ticket() {
         data
       );
   };
+
+  // check if the ticket ID path is valid
+  useEffect(() => {
+    const allTicketIds = projects
+      .map((project) => project.tickets.map((ticket) => ticket.ticketId))
+      .flat();
+    if (ticketId) {
+      !allTicketIds.includes(ticketId) &&
+        navigate(`projects/${projectId}/tickets`);
+    }
+  }, []);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -180,7 +192,7 @@ export function Ticket() {
               <Stack direction="row">
                 <Typography sx={{ p: 2 }}>
                   <Typography component="span" sx={{ fontWeight: "bold" }}>
-                    Ticket Name
+                    Ticket Name:
                   </Typography>{" "}
                   {currentTicket?.ticketName}
                 </Typography>

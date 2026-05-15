@@ -71,7 +71,7 @@ const TicketLinksSection = ({
 
   return (
     <Box sx={{ ml: 4, pr: 2, width: "100%" }}>
-      <Typography variant="h4">Related links:</Typography>
+      <Typography variant="h4">Related links</Typography>
       <List>
         {currentTicket?.ticketLinks.map((linkData, index) => {
           if (
@@ -185,6 +185,8 @@ const TicketLinksSection = ({
                     {linkData.linkName}:&nbsp;
                   </Typography>
                   <MUILink
+                    href={linkData.link}
+                    target="_blank"
                     sx={{
                       flex: 8,
                       cursor: "pointer",
