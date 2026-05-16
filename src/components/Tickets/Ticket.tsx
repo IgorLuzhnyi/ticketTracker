@@ -30,7 +30,9 @@ import { useForm } from "react-hook-form";
 import { TICKET_ATTRIBUTES, ticketActions } from "../../constants/constants";
 import {
   alternativeButtonStyling,
+  confirmButtonStyling,
   CustomButton,
+  declineButtonStyling,
 } from "../CustomButtons/CustomButton";
 
 export function Ticket() {
@@ -42,10 +44,10 @@ export function Ticket() {
   const { projects, selectedProjectIndex, updateTicket } = useProjectsContext();
 
   const currentProject = projects.find(
-    (project) => project.projectId === projectId
+    (project) => project.projectId === projectId,
   );
   const currentTicket = currentProject?.tickets.find(
-    (ticket) => ticket.ticketId === ticketId
+    (ticket) => ticket.ticketId === ticketId,
   );
 
   // states
@@ -74,7 +76,7 @@ export function Ticket() {
         projectId,
         ticketId,
         currentTicketLinkId,
-        data
+        data,
       );
   };
 
@@ -148,9 +150,6 @@ export function Ticket() {
                       variant="outlined"
                       label="Name of the ticket *"
                       defaultValue={currentTicket?.ticketName}
-                      sx={{
-                        backgroundColor: "primary.light",
-                      }}
                       {...register("ticketName", {
                         required: {
                           value: true,
@@ -169,35 +168,24 @@ export function Ticket() {
                         : ""}
                     </Typography>
                   </FormControl>
-                  <Stack direction="row" sx={{ width: "100%" }}>
-                    <Button
+                  <Stack direction="row" sx={{ width: "100%", gap: 1 }}>
+                    <CustomButton
                       type="submit"
                       variant="contained"
-                      sx={{
-                        color: "secondary.main",
-                        backgroundColor: "info.main",
-                        width: "100%",
-                        mb: 2,
-                      }}
+                      sx={{ ...confirmButtonStyling, width: "100%" }}
                     >
                       Submit
-                    </Button>
-                    <Button
+                    </CustomButton>
+                    <CustomButton
                       variant="contained"
-                      sx={{
-                        color: "secondary.main",
-                        backgroundColor: "red",
-                        width: "100%",
-                        marginBottom: "auto",
-                        alignSelf: "flex-end",
-                      }}
+                      sx={{ ...declineButtonStyling, width: "100%" }}
                       onClick={() => {
                         reset();
                         resetEditingData();
                       }}
                     >
                       Cancel
-                    </Button>
+                    </CustomButton>
                   </Stack>
                 </Box>
               </form>
@@ -254,33 +242,25 @@ export function Ticket() {
                     variant="outlined"
                     label="Ticket description"
                     defaultValue={currentTicket?.ticketDescription}
-                    sx={{
-                      backgroundColor: "primary.light",
-                    }}
                     {...register("ticketDescription")}
                   />
                 </FormControl>
-                <Stack direction="row" sx={{ width: "100%" }}>
-                  <Button
+                <Stack direction="row" sx={{ width: "100%", gap: 1 }}>
+                  <CustomButton
                     type="submit"
                     variant="contained"
                     sx={{
-                      color: "secondary.main",
-                      backgroundColor: "info.main",
+                      ...confirmButtonStyling,
                       width: "100%",
-                      mb: 2,
                     }}
                   >
                     Submit
-                  </Button>
-                  <Button
+                  </CustomButton>
+                  <CustomButton
                     variant="contained"
                     sx={{
-                      color: "secondary.main",
-                      backgroundColor: "red",
+                      ...declineButtonStyling,
                       width: "100%",
-                      marginBottom: "auto",
-                      alignSelf: "flex-end",
                     }}
                     onClick={() => {
                       reset();
@@ -288,7 +268,7 @@ export function Ticket() {
                     }}
                   >
                     Cancel
-                  </Button>
+                  </CustomButton>
                 </Stack>
               </form>
             ) : (
@@ -302,7 +282,9 @@ export function Ticket() {
                     gap: 2,
                   }}
                 >
-                  <Typography>Description:</Typography>
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Description:
+                  </Typography>
                   <CustomButton
                     sx={{ ...alternativeButtonStyling, py: 0, flexShrink: 0 }}
                     onClick={() => {
@@ -345,9 +327,11 @@ export function Ticket() {
           />
         </Box>
       </Stack>
-      <Typography>
-        History {currentTicket?.ticketHistory.map((post) => post.message)}
-      </Typography>
+      <Divider sx={{ my: 1 }} />
+      <Box>
+        <Typography sx={{ fontWeight: "bold" }}>History</Typography>
+        <Box>{currentTicket?.ticketHistory.map((post) => post.message)}</Box>
+      </Box>
     </Box>
   );
 }

@@ -30,6 +30,12 @@ import {
   TicketLinksEditingAction,
   TicketLinksCurrentlyEditing,
 } from "./types/types";
+import {
+  alternativeButtonStyling,
+  confirmButtonStyling,
+  CustomButton,
+  declineButtonStyling,
+} from "../CustomButtons/CustomButton";
 
 type TicketLinksSectionProps = {
   ticket?: Ticket;
@@ -71,7 +77,9 @@ const TicketLinksSection = ({
 
   return (
     <Box sx={{ mt: 1, pl: 2 }}>
-      <Typography variant="h4">Related links:</Typography>
+      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+        Related links:
+      </Typography>
       <List>
         {currentTicket?.ticketLinks.map((linkData, index) => {
           if (
@@ -145,24 +153,22 @@ const TicketLinksSection = ({
                           : null}
                       </Typography>
                     </FormControl>
-                    <Stack direction="row">
-                      <Button
+                    <Stack direction="row" sx={{ gap: 1 }}>
+                      <CustomButton
                         type="submit"
                         variant="contained"
                         sx={{
-                          color: "secondary.main",
-                          backgroundColor: "info.main",
-                          mb: 2,
+                          ...confirmButtonStyling,
+                          width: "100%",
                         }}
                       >
                         Submit
-                      </Button>
-                      <Button
+                      </CustomButton>
+                      <CustomButton
                         variant="contained"
                         sx={{
-                          color: "secondary.main",
-                          backgroundColor: "red",
-                          mb: 2,
+                          ...declineButtonStyling,
+                          width: "100%",
                         }}
                         onClick={() => {
                           reset();
@@ -170,7 +176,7 @@ const TicketLinksSection = ({
                         }}
                       >
                         Cancel
-                      </Button>
+                      </CustomButton>
                     </Stack>
                   </Stack>
                   <Divider sx={{ mt: 1, mb: 1 }} />
@@ -196,9 +202,9 @@ const TicketLinksSection = ({
                   >
                     {linkData.link}
                   </MUILink>
-                  <Stack direction="row" sx={{ flex: 2 }}>
-                    <Button
-                      sx={{ color: "black" }}
+                  <Stack direction="row" sx={{ flex: 2, gap: 1 }}>
+                    <CustomButton
+                      sx={alternativeButtonStyling}
                       onClick={() => {
                         replace([]);
                         setEditingAction(ticketActions.editingLink);
@@ -206,7 +212,7 @@ const TicketLinksSection = ({
                       }}
                     >
                       Edit
-                    </Button>
+                    </CustomButton>
                     <Button
                       sx={{ color: "black" }}
                       onClick={() => {
@@ -234,7 +240,7 @@ const TicketLinksSection = ({
                                 projectId,
                                 ticketId,
                                 currentlyEditing,
-                                {}
+                                {},
                               );
                           }}
                         >

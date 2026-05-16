@@ -4,8 +4,6 @@
 10. Add error page when there is no such projectId or ticketId in the path
 15. Check if can refine the form using useWatch - probably would be more neat for defaultValue inside the fields
 17. Make ticket links to actually transer
-18. Check if ticket link data id is redundant, remove if so
-19. Doesn't add space after ":" in Tickets - refine
 20. Spot already existing links
 21. Make links optional - but keep in mind that if a link is added, then linkName should be added too, and vice versa.
 25. There is a behavior when project is removed, but we are still on Ticket editing page with all the data
@@ -14,7 +12,6 @@
 29. Probably remove uuid, need to leave only useForm's ids created by default. Need to adjust link's type, probably set id as to an optional one or whatever
 31. Work on ticket statuses
 32. Make "please log in or continue as a guest" for the "/" path
-34. Adjust the Input and Button to styled
 36. Write a function to avoid the same project/ticket names
 37. Add a tooltip on the footer to explain the purpose of this app
 40. Add the "Premium" feature
@@ -25,4 +22,4 @@
 45. Move from local storage to json server
 46. Make responsive
 47. Write a separate function in the context for updating ticket links based on ticket id
-48. Description text must not overlap the button
+48. Write 2 "default" projects with tickets
