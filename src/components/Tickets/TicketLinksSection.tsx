@@ -191,6 +191,8 @@ const TicketLinksSection = ({
                     {linkData.linkName}:&nbsp;
                   </Typography>
                   <MUILink
+                    href={linkData.link}
+                    target="_blank"
                     sx={{
                       flex: 8,
                       cursor: "pointer",

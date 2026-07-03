@@ -6,6 +6,7 @@ import { NoProjectsPlaceholder } from "./components/Projects/NoProjectsPlacehold
 import { Tickets } from "./components/Tickets/Tickets";
 import { Ticket } from "./components/Tickets/Ticket";
 import { ProjectsContextProvider } from "./contexts/projectsContext";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Main />,
+      },
+      {
+        path: "/*",
+        element: <PageNotFound />,
       },
       {
         path: "/projects",

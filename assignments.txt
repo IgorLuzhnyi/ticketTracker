@@ -1,9 +1,10 @@
 6. Make max number message of additional links
 7. Make "due dates"
 9. Add sorting functionality
-10. Add error page when there is no such projectId or ticketId in the path
 15. Check if can refine the form using useWatch - probably would be more neat for defaultValue inside the fields
 17. Make ticket links to actually transer
+18. Check if ticket link data id is redundant, remove if so
+19. Doesn't add space after ":" in Tickets - refine
 20. Spot already existing links
 21. Make links optional - but keep in mind that if a link is added, then linkName should be added too, and vice versa.
 25. There is a behavior when project is removed, but we are still on Ticket editing page with all the data
@@ -21,5 +22,7 @@
 44. Tooltip for maximum links in Tickets
 45. Move from local storage to json server
 46. Make responsive
-47. Write a separate function in the context for updating ticket links based on ticket id
-48. Write 2 "default" projects with tickets
+47. Write constants for paths in Browser router
+48. Create "active" paths. So that when redirection happens, the relevant projects/tickets are active
+49. Write a separate function in the context for updating ticket links based on ticket id
+50. Write 2 "default" projects with tickets
