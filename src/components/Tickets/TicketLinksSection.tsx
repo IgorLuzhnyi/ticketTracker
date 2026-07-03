@@ -204,60 +204,60 @@ const TicketLinksSection = ({
                   >
                     {linkData.link}
                   </MUILink>
-                  <Stack direction="row" sx={{ flex: 2, gap: 1 }}>
-                    <CustomButton
-                      sx={alternativeButtonStyling}
-                      onClick={() => {
-                        replace([]);
-                        setEditingAction(ticketActions.editingLink);
-                        setCurrentlyEditing(linkData.id);
-                      }}
-                    >
-                      Edit
-                    </CustomButton>
-                    <Button
-                      sx={{ color: "black" }}
-                      onClick={() => {
-                        setEditingAction(ticketActions.removingLink);
-                        setCurrentlyEditing(linkData.id);
-                        setConfirmationWindowIsOpen(true);
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  </Stack>
+                  {linkData.id !== currentlyEditing && (
+                    <Stack direction="row" sx={{ flex: 2, gap: 1 }}>
+                      <CustomButton
+                        sx={alternativeButtonStyling}
+                        onClick={() => {
+                          replace([]);
+                          setEditingAction(ticketActions.editingLink);
+                          setCurrentlyEditing(linkData.id);
+                        }}
+                      >
+                        Edit
+                      </CustomButton>
+                      <Button
+                        sx={{ color: "black" }}
+                        onClick={() => {
+                          setEditingAction(ticketActions.removingLink);
+                          setCurrentlyEditing(linkData.id);
+                          setConfirmationWindowIsOpen(true);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Stack>
+                  )}
                   {/* confirmation window */}
                   <Stack>
                     {confirmationWindowIsOpen &&
-                    linkData.id === currentlyEditing ? (
-                      <Stack>
-                        <Typography>
-                          Are you sure you want to delete this link?
-                        </Typography>
-                        <Button
-                          onClick={() => {
-                            if (projectId && ticketId)
-                              updateTicket(
-                                editingAction,
-                                projectId,
-                                ticketId,
-                                currentlyEditing,
-                                {},
-                              );
-                          }}
-                        >
-                          Yes
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            resetEditingData();
-                            setConfirmationWindowIsOpen(false);
-                          }}
-                        >
-                          No
-                        </Button>
-                      </Stack>
-                    ) : null}
+                      linkData.id === currentlyEditing && (
+                        <Stack>
+                          <Typography>Delete this link?</Typography>
+                          <Button
+                            onClick={() => {
+                              if (projectId && ticketId)
+                                updateTicket(
+                                  editingAction,
+                                  projectId,
+                                  ticketId,
+                                  currentlyEditing,
+                                  {},
+                                );
+                            }}
+                          >
+                            Yes
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              resetEditingData();
+                              setConfirmationWindowIsOpen(false);
+                            }}
+                          >
+                            No
+                          </Button>
+                        </Stack>
+                      )}
                   </Stack>
                 </Stack>
                 <Divider sx={{ mt: 1, mb: 1 }} />
