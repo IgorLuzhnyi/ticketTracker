@@ -153,6 +153,7 @@ export function Ticket() {
                 <Box>
                   <FormControl
                     sx={{
+                      py: 1,
                       width: "100%",
                       alignSelf: "flex-start",
                     }}
@@ -245,6 +246,7 @@ export function Ticket() {
               >
                 <FormControl
                   sx={{
+                    py: 1,
                     width: "100%",
                     alignSelf: "flex-start",
                   }}
@@ -253,6 +255,8 @@ export function Ticket() {
                     autoFocus
                     variant="outlined"
                     label="Ticket description"
+                    multiline
+                    rows={4}
                     defaultValue={currentTicket?.ticketDescription}
                     {...register("ticketDescription")}
                   />
@@ -310,6 +314,7 @@ export function Ticket() {
                 <Typography
                   variant="h6"
                   sx={{
+                    mt: 1,
                     flex: 1,
                     wordBreak: "break-word",
                     overflowWrap: "anywhere",

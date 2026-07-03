@@ -1,24 +1,18 @@
 import { forwardRef } from "react";
 import { Button, ButtonProps } from "@mui/material";
-import { SxProps, Theme } from "@mui/system";
 
-interface CustomButtonProps extends ButtonProps {
-  sx?: SxProps<Theme>;
-}
-
-export const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
+export const CustomButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ sx, children, ...rest }, ref) => {
     return (
       <Button
         ref={ref}
         {...rest}
-        size="small"
+        size="small" // this forces the CustomButton to always be small. change if needed
         variant="outlined"
         sx={{
-          mt: 1,
-          mb: 1,
-          pl: 1,
-          pr: 1,
+          py: 0,
+          px: 1,
+          alignSelf: "start",
           "&:hover": {
             backgroundColor: "primary.main",
             borderColor: "primary.dark",
@@ -30,7 +24,7 @@ export const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
         {children}
       </Button>
     );
-  }
+  },
 );
 
 export const alternativeButtonStyling = {
@@ -49,7 +43,8 @@ export const confirmButtonStyling = {
   backgroundColor: "success.main",
   color: "#fff",
   borderColor: "success.main",
-  "&.MuiButtonBase-root:hover": {
+
+  "&:hover": {
     backgroundColor: "primary.main",
     borderColor: "secondary.main",
   },
@@ -60,9 +55,9 @@ export const declineButtonStyling = {
   backgroundColor: "info.main",
   borderColor: "secondary.dark",
 
-  "&.MuiButtonBase-root:hover": {
-    backgroundColor: "secondary.main",
+  "&:hover": {
     color: "#fff",
+    backgroundColor: "secondary.main",
     borderColor: "secondary.main",
   },
 };

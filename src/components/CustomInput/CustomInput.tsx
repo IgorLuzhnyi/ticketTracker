@@ -1,21 +1,30 @@
-import { forwardRef } from "react";
-import { TextField, TextFieldProps, styled } from "@mui/material";
+import { TextField, styled } from "@mui/material";
 
-const CustomInput = styled(
-  forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => (
-    <TextField size="small" {...props} ref={ref} />
-  ))
-)(({ theme }) => ({
+const CustomInput = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
-    borderRadius: 0,
+    borderRadius: 5,
+    fontSize: 14,
+
+    "&:not(.MuiInputBase-multiline)": {
+      height: 36,
+    },
+
     "& fieldset": {
       borderColor: theme.palette.secondary.light,
+      borderWidth: 1,
     },
+
     "&:hover fieldset": {
       borderColor: theme.palette.secondary.main,
     },
+
     "&.Mui-focused fieldset": {
       borderColor: theme.palette.primary.main,
+      borderWidth: 1,
+    },
+
+    "& input": {
+      padding: "6px 12px",
     },
   },
 }));

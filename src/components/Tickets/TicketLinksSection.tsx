@@ -99,60 +99,66 @@ const TicketLinksSection = ({
                     sx={{
                       mt: 1,
                       mb: 1,
+                      justifyContent: "space-between",
                     }}
                   >
-                    <FormControl>
-                      <CustomInput
-                        autoFocus
-                        variant="outlined"
-                        sx={{ mr: 2 }}
-                        defaultValue={
-                          currentTicket?.ticketLinks[index].linkName
-                        }
-                        label="Name of the service *"
-                        {...register(`ticketLinks.${index}.linkName` as const, {
-                          pattern: {
-                            value: /^.{1,30}$/,
-                            message: "30 characters max",
-                          },
-                          required: true,
-                        })}
-                        error={
-                          !!errors.ticketLinks &&
-                          !!errors.ticketLinks[index]?.linkName
-                        }
-                      />
-                      <Typography variant="subtitle2" color="error">
-                        {currentlyEditing && errors.ticketLinks
-                          ? errors.ticketLinks[index]?.linkName?.message
-                          : ""}
-                      </Typography>
-                    </FormControl>
-                    <FormControl>
-                      <CustomInput
-                        sx={{ mr: 2 }}
-                        defaultValue={currentTicket?.ticketLinks[index].link}
-                        label="Related link *"
-                        {...register(`ticketLinks.${index}.link` as const, {
-                          pattern: {
-                            value: /^.{1,100}$/,
-                            message: "100 characters max",
-                          },
-                          validate: (fieldValue) =>
-                            isURL(fieldValue) || "You must enter a link",
-                          required: true,
-                        })}
-                        error={
-                          !!errors.ticketLinks &&
-                          !!errors.ticketLinks[index]?.link
-                        }
-                      />
-                      <Typography variant="subtitle2" color="error">
-                        {currentlyEditing && errors.ticketLinks
-                          ? errors.ticketLinks[index]?.link?.message
-                          : null}
-                      </Typography>
-                    </FormControl>
+                    <Stack direction="row">
+                      <FormControl>
+                        <CustomInput
+                          autoFocus
+                          variant="outlined"
+                          sx={{ mr: 2 }}
+                          defaultValue={
+                            currentTicket?.ticketLinks[index].linkName
+                          }
+                          label="Name of the service *"
+                          {...register(
+                            `ticketLinks.${index}.linkName` as const,
+                            {
+                              pattern: {
+                                value: /^.{1,30}$/,
+                                message: "30 characters max",
+                              },
+                              required: true,
+                            },
+                          )}
+                          error={
+                            !!errors.ticketLinks &&
+                            !!errors.ticketLinks[index]?.linkName
+                          }
+                        />
+                        <Typography variant="subtitle2" color="error">
+                          {currentlyEditing && errors.ticketLinks
+                            ? errors.ticketLinks[index]?.linkName?.message
+                            : ""}
+                        </Typography>
+                      </FormControl>
+                      <FormControl>
+                        <CustomInput
+                          sx={{ mr: 2 }}
+                          defaultValue={currentTicket?.ticketLinks[index].link}
+                          label="Related link *"
+                          {...register(`ticketLinks.${index}.link` as const, {
+                            pattern: {
+                              value: /^.{1,100}$/,
+                              message: "100 characters max",
+                            },
+                            validate: (fieldValue) =>
+                              isURL(fieldValue) || "You must enter a link",
+                            required: true,
+                          })}
+                          error={
+                            !!errors.ticketLinks &&
+                            !!errors.ticketLinks[index]?.link
+                          }
+                        />
+                        <Typography variant="subtitle2" color="error">
+                          {currentlyEditing && errors.ticketLinks
+                            ? errors.ticketLinks[index]?.link?.message
+                            : null}
+                        </Typography>
+                      </FormControl>
+                    </Stack>
                     <Stack direction="row" sx={{ gap: 1 }}>
                       <CustomButton
                         type="submit"
@@ -187,7 +193,7 @@ const TicketLinksSection = ({
             return (
               <Box key={index}>
                 <Stack direction="row" sx={{ alignItems: "center" }}>
-                  <Typography sx={{ flex: 2 }}>
+                  <Typography sx={{ flex: 2, fontSize: "14px" }}>
                     {linkData.linkName}:&nbsp;
                   </Typography>
                   <MUILink
@@ -199,13 +205,13 @@ const TicketLinksSection = ({
                       color: "black",
                       textDecoration: "none",
                       fontFamily: theme.typography.fontFamily,
-                      fontSize: theme.typography.h5.fontSize,
+                      fontSize: "14px",
                     }}
                   >
                     {linkData.link}
                   </MUILink>
                   {linkData.id !== currentlyEditing && (
-                    <Stack direction="row" sx={{ flex: 2, gap: 1 }}>
+                    <Stack direction="row" sx={{ gap: 1 }}>
                       <CustomButton
                         sx={alternativeButtonStyling}
                         onClick={() => {
@@ -216,8 +222,8 @@ const TicketLinksSection = ({
                       >
                         Edit
                       </CustomButton>
-                      <Button
-                        sx={{ color: "black" }}
+                      <CustomButton
+                        sx={alternativeButtonStyling}
                         onClick={() => {
                           setEditingAction(ticketActions.removingLink);
                           setCurrentlyEditing(linkData.id);
@@ -225,16 +231,21 @@ const TicketLinksSection = ({
                         }}
                       >
                         Remove
-                      </Button>
+                      </CustomButton>
                     </Stack>
                   )}
-                  {/* confirmation window */}
                   <Stack>
                     {confirmationWindowIsOpen &&
                       linkData.id === currentlyEditing && (
-                        <Stack>
+                        <Stack
+                          direction="row"
+                          sx={{ alignItems: "center", gap: 1 }}
+                        >
                           <Typography>Delete this link?</Typography>
-                          <Button
+                          <CustomButton
+                            sx={{
+                              ...confirmButtonStyling,
+                            }}
                             onClick={() => {
                               if (projectId && ticketId)
                                 updateTicket(
@@ -247,15 +258,16 @@ const TicketLinksSection = ({
                             }}
                           >
                             Yes
-                          </Button>
-                          <Button
+                          </CustomButton>
+                          <CustomButton
+                            sx={declineButtonStyling}
                             onClick={() => {
                               resetEditingData();
                               setConfirmationWindowIsOpen(false);
                             }}
                           >
                             No
-                          </Button>
+                          </CustomButton>
                         </Stack>
                       )}
                   </Stack>
@@ -352,6 +364,7 @@ const TicketLinksSection = ({
               : false
           }
           onClick={() => {
+            // need to reset if was editing anything else before clicked this button
             if (editingAction !== ticketActions.editingLink) {
               setEditingAction(ticketActions.addingLink);
             } else {

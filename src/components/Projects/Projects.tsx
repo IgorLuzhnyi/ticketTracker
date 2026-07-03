@@ -124,6 +124,7 @@ export function Projects() {
                     variant="outlined"
                     id="new-project"
                     label="Name of the project"
+                    sx={{ my: 1 }}
                     {...register("projectName", {
                       required: {
                         value: true,
@@ -213,8 +214,6 @@ export function Projects() {
                       <Box
                         sx={{
                           width: "100%",
-                          mt: 2,
-                          mb: 1,
                           justifyContent: "center",
                         }}
                       >
@@ -229,6 +228,7 @@ export function Projects() {
                               autoFocus
                               variant="outlined"
                               label="Name of the project"
+                              sx={{ my: 1 }}
                               id="existing-project"
                               defaultValue={
                                 editedProjectIndex >= 0
@@ -252,7 +252,7 @@ export function Projects() {
                             </Typography>
                             <Stack
                               direction="row"
-                              sx={{ justifyContent: "space-between" }}
+                              sx={{ mb: 1, justifyContent: "space-between" }}
                             >
                               <CustomButton
                                 type="submit"
@@ -355,7 +355,7 @@ export function Projects() {
                                         removeProject(project.projectId),
                                       onDecline: () =>
                                         setConfirmationWindowValues(
-                                          defaultConfirmationWindowValues
+                                          defaultConfirmationWindowValues,
                                         ),
                                     });
                                   }}

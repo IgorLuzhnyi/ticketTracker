@@ -26,3 +26,5 @@
 48. Create "active" paths. So that when redirection happens, the relevant projects/tickets are active
 49. Write a separate function in the context for updating ticket links based on ticket id
 50. Write 2 "default" projects with tickets
+51. Check if all validation fields configured properly
+52. Work on Add new ticket link button issue
