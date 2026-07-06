@@ -7,7 +7,6 @@ export const CustomButton = forwardRef<HTMLButtonElement, ButtonProps>(
       <Button
         ref={ref}
         {...rest}
-        size="small" // this forces the CustomButton to always be small. change if needed
         variant="outlined"
         sx={{
           py: 0,

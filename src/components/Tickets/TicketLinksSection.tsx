@@ -3,12 +3,13 @@ import {
   Typography,
   List,
   Stack,
-  FormControl,
   Button,
   Link as MUILink,
   Divider,
+  Tooltip,
 } from "@mui/material";
 import CustomInput from "../CustomInput/CustomInput";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useState } from "react";
 
@@ -103,61 +104,54 @@ const TicketLinksSection = ({
                     }}
                   >
                     <Stack direction="row">
-                      <FormControl>
-                        <CustomInput
-                          autoFocus
-                          variant="outlined"
-                          sx={{ mr: 2 }}
-                          defaultValue={
-                            currentTicket?.ticketLinks[index].linkName
-                          }
-                          label="Name of the service *"
-                          {...register(
-                            `ticketLinks.${index}.linkName` as const,
-                            {
-                              pattern: {
-                                value: /^.{1,30}$/,
-                                message: "30 characters max",
-                              },
-                              required: true,
-                            },
-                          )}
-                          error={
-                            !!errors.ticketLinks &&
-                            !!errors.ticketLinks[index]?.linkName
-                          }
-                        />
-                        <Typography variant="subtitle2" color="error">
-                          {currentlyEditing && errors.ticketLinks
-                            ? errors.ticketLinks[index]?.linkName?.message
-                            : ""}
-                        </Typography>
-                      </FormControl>
-                      <FormControl>
-                        <CustomInput
-                          sx={{ mr: 2 }}
-                          defaultValue={currentTicket?.ticketLinks[index].link}
-                          label="Related link *"
-                          {...register(`ticketLinks.${index}.link` as const, {
-                            pattern: {
-                              value: /^.{1,100}$/,
-                              message: "100 characters max",
-                            },
-                            validate: (fieldValue) =>
-                              isURL(fieldValue) || "You must enter a link",
-                            required: true,
-                          })}
-                          error={
-                            !!errors.ticketLinks &&
-                            !!errors.ticketLinks[index]?.link
-                          }
-                        />
-                        <Typography variant="subtitle2" color="error">
-                          {currentlyEditing && errors.ticketLinks
-                            ? errors.ticketLinks[index]?.link?.message
-                            : null}
-                        </Typography>
-                      </FormControl>
+                      <CustomInput
+                        autoFocus
+                        variant="outlined"
+                        sx={{ mr: 2 }}
+                        defaultValue={
+                          currentTicket?.ticketLinks[index].linkName
+                        }
+                        label="Name of the service *"
+                        {...register(`ticketLinks.${index}.linkName` as const, {
+                          pattern: {
+                            value: /^.{1,30}$/,
+                            message: "30 characters max",
+                          },
+                          required: true,
+                        })}
+                        error={
+                          !!errors.ticketLinks &&
+                          !!errors.ticketLinks[index]?.linkName
+                        }
+                      />
+                      <Typography variant="subtitle2" color="error">
+                        {currentlyEditing && errors.ticketLinks
+                          ? errors.ticketLinks[index]?.linkName?.message
+                          : ""}
+                      </Typography>
+                      <CustomInput
+                        sx={{ mr: 2 }}
+                        defaultValue={currentTicket?.ticketLinks[index].link}
+                        label="Related link *"
+                        {...register(`ticketLinks.${index}.link` as const, {
+                          pattern: {
+                            value: /^.{1,100}$/,
+                            message: "100 characters max",
+                          },
+                          validate: (fieldValue) =>
+                            isURL(fieldValue) || "You must enter a link",
+                          required: true,
+                        })}
+                        error={
+                          !!errors.ticketLinks &&
+                          !!errors.ticketLinks[index]?.link
+                        }
+                      />
+                      <Typography variant="subtitle2" color="error">
+                        {currentlyEditing && errors.ticketLinks
+                          ? errors.ticketLinks[index]?.link?.message
+                          : null}
+                      </Typography>
                     </Stack>
                     <Stack direction="row" sx={{ gap: 1 }}>
                       <CustomButton
@@ -192,26 +186,58 @@ const TicketLinksSection = ({
           } else {
             return (
               <Box key={index}>
-                <Stack direction="row" sx={{ alignItems: "center" }}>
-                  <Typography sx={{ flex: 2, fontSize: "14px" }}>
-                    {linkData.linkName}:&nbsp;
-                  </Typography>
-                  <MUILink
-                    href={linkData.link}
-                    target="_blank"
-                    sx={{
-                      flex: 8,
-                      cursor: "pointer",
-                      color: "black",
-                      textDecoration: "none",
-                      fontFamily: theme.typography.fontFamily,
-                      fontSize: "14px",
-                    }}
+                <Stack
+                  direction="row"
+                  sx={{ justifyContent: "space-between", alignItems: "center" }}
+                >
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    sx={{ flex: 8, minWidth: 0 }}
                   >
-                    {linkData.link}
-                  </MUILink>
+                    <Tooltip title={linkData.linkName} placement="top">
+                      <Typography
+                        sx={{
+                          flex: "1 1 150px",
+                          minWidth: 100,
+                          maxWidth: 200,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {linkData.linkName}:
+                      </Typography>
+                    </Tooltip>
+
+                    <Tooltip title={linkData.link} placement="top">
+                      <MUILink
+                        href={linkData.link}
+                        target="_blank"
+                        sx={{
+                          flex: "1 1 200px",
+                          minWidth: 0,
+                          px: 2,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          cursor: "pointer",
+                          color: "black",
+                          textDecoration: "none",
+                          fontFamily: theme.typography.fontFamily,
+                          fontSize: "14px",
+                        }}
+                      >
+                        {linkData.link}
+                      </MUILink>
+                    </Tooltip>
+                  </Stack>
                   {linkData.id !== currentlyEditing && (
-                    <Stack direction="row" sx={{ gap: 1 }}>
+                    <Stack
+                      direction="row"
+                      sx={{ flex: 4, gap: 1, justifyContent: "end" }}
+                    >
                       <CustomButton
                         sx={alternativeButtonStyling}
                         onClick={() => {
@@ -222,16 +248,18 @@ const TicketLinksSection = ({
                       >
                         Edit
                       </CustomButton>
-                      <CustomButton
-                        sx={alternativeButtonStyling}
+                      <DeleteIcon
+                        sx={{
+                          color: "secondary.main",
+                          "&:hover": { color: "secondary.dark" },
+                          cursor: "pointer",
+                        }}
                         onClick={() => {
                           setEditingAction(ticketActions.removingLink);
                           setCurrentlyEditing(linkData.id);
                           setConfirmationWindowIsOpen(true);
                         }}
-                      >
-                        Remove
-                      </CustomButton>
+                      />
                     </Stack>
                   )}
                   <Stack>
@@ -239,7 +267,7 @@ const TicketLinksSection = ({
                       linkData.id === currentlyEditing && (
                         <Stack
                           direction="row"
-                          sx={{ alignItems: "center", gap: 1 }}
+                          sx={{ flex: 4, alignItems: "center", gap: 1 }}
                         >
                           <Typography>Delete this link?</Typography>
                           <CustomButton
@@ -289,100 +317,101 @@ const TicketLinksSection = ({
         >
           <List>
             {fields.map((field, index) => (
-              <Stack direction="row" key={field.id}>
-                <Stack direction="row">
-                  <FormControl>
-                    <CustomInput
-                      variant="outlined"
-                      label="Name of the service *"
-                      sx={{
-                        backgroundColor: "primary.light",
-                      }}
-                      {...register(`ticketLinks.${index}.linkName` as const, {
-                        pattern: {
-                          value: /^.{1,30}$/,
-                          message: "30 characters max",
-                        },
-                        // validate: (fieldValue) =>
-                        //   !fieldValue && "Cannot be empty",
-                        required: true,
-                      })}
-                      error={
-                        !!errors.ticketLinks &&
-                        !!errors.ticketLinks[index]?.linkName
-                      }
-                    />
-                    <Typography variant="subtitle2" color="error">
-                      {errors.ticketLinks
-                        ? errors.ticketLinks[index]?.linkName?.message
-                        : null}
-                    </Typography>
-                  </FormControl>
-                  <FormControl>
-                    <CustomInput
-                      label="Related link *"
-                      {...register(`ticketLinks.${index}.link` as const, {
-                        pattern: {
-                          value: /^.{1,100}$/,
-                          message: "100 characters max",
-                        },
-                        validate: (fieldValue) =>
-                          isURL(fieldValue) || "You must enter a link",
-                        required: true,
-                      })}
-                      error={
-                        !!errors.ticketLinks &&
-                        !!errors.ticketLinks[index]?.link
-                      }
-                    />
-                    <Typography variant="subtitle2" color="error">
-                      {errors.ticketLinks
-                        ? errors.ticketLinks[index]?.link?.message
-                        : null}
-                    </Typography>
-                  </FormControl>
-                  <Button color="secondary" onClick={() => remove(index)}>
-                    X
-                  </Button>
+              <Box key={field.id} sx={{ mb: 2, width: "fit-content" }}>
+                <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
+                  <CustomInput
+                    variant="outlined"
+                    label="Name of the service *"
+                    {...register(`ticketLinks.${index}.linkName` as const, {
+                      pattern: {
+                        value: /^.{1,30}$/,
+                        message: "30 characters max",
+                      },
+                      // validate: (fieldValue) =>
+                      //   !fieldValue && "Cannot be empty",
+                      required: true,
+                    })}
+                    error={
+                      !!errors.ticketLinks &&
+                      !!errors.ticketLinks[index]?.linkName
+                    }
+                  />
+                  <Typography variant="subtitle2" color="error">
+                    {errors.ticketLinks
+                      ? errors.ticketLinks[index]?.linkName?.message
+                      : null}
+                  </Typography>
+                  <CustomInput
+                    label="Related link *"
+                    {...register(`ticketLinks.${index}.link` as const, {
+                      pattern: {
+                        value: /^.{1,100}$/,
+                        message: "100 characters max",
+                      },
+                      validate: (fieldValue) =>
+                        isURL(fieldValue) || "You must enter a link",
+                      required: true,
+                    })}
+                    error={
+                      !!errors.ticketLinks && !!errors.ticketLinks[index]?.link
+                    }
+                  />
+                  <Typography variant="subtitle2" color="error">
+                    {errors.ticketLinks
+                      ? errors.ticketLinks[index]?.link?.message
+                      : null}
+                  </Typography>
+                  <DeleteIcon
+                    sx={{
+                      color: "secondary.main",
+                      "&:hover": { color: "secondary.dark" },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => remove(index)}
+                  />
                 </Stack>
-              </Stack>
+                <Divider sx={{ my: 1 }} />
+              </Box>
             ))}
           </List>
-          {fields.length > 0 && (
-            <Stack direction="row">
-              <Button type="submit">Submit</Button>
-            </Stack>
-          )}
-        </form>
-        <Button
-          color="secondary"
-          disabled={
-            currentTicket?.ticketLinks.length &&
+
+          <CustomButton
+            sx={alternativeButtonStyling}
+            disabled={
+              currentTicket?.ticketLinks.length &&
+              currentTicket?.ticketLinks.length + fields.length ===
+                MAX_TICKET_LINKS
+                ? true
+                : false
+            }
+            onClick={() => {
+              // need to reset if was editing anything else before clicked this button
+              if (editingAction !== ticketActions.editingLink) {
+                setEditingAction(ticketActions.addingLink);
+              } else {
+                setEditingAction(ticketActions.addingLink);
+                reset({ ticketLinks: [] }); // this line causes issue. probably refine updateWithMutable
+              }
+              append({
+                link: "",
+                linkName: "",
+                id: uuidv4(),
+              });
+            }}
+          >
+            {currentTicket?.ticketLinks.length &&
             currentTicket?.ticketLinks.length + fields.length ===
               MAX_TICKET_LINKS
-              ? true
-              : false
-          }
-          onClick={() => {
-            // need to reset if was editing anything else before clicked this button
-            if (editingAction !== ticketActions.editingLink) {
-              setEditingAction(ticketActions.addingLink);
-            } else {
-              setEditingAction(ticketActions.addingLink);
-              reset({ ticketLinks: [] }); // this line causes issue. probably refine updateWithMutable
-            }
-            append({
-              link: "",
-              linkName: "",
-              id: uuidv4(),
-            });
-          }}
-        >
-          {currentTicket?.ticketLinks.length &&
-          currentTicket?.ticketLinks.length + fields.length === MAX_TICKET_LINKS
-            ? `Max links number is ${MAX_TICKET_LINKS}`
-            : "Add new ticket link"}
-        </Button>
+              ? `Max links number is ${MAX_TICKET_LINKS}`
+              : "Add new ticket link"}
+          </CustomButton>
+
+          {fields.length > 0 && (
+            <Box>
+              <Button type="submit">Submit</Button>
+            </Box>
+          )}
+        </form>
       </Box>
     </Box>
   );

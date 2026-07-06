@@ -79,6 +79,8 @@ export function Ticket() {
         currentTicketLinkId,
         data,
       );
+
+    resetEditingData();
   };
 
   // check if the ticket ID path is valid

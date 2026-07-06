@@ -27,4 +27,5 @@
 49. Write a separate function in the context for updating ticket links based on ticket id
 50. Write 2 "default" projects with tickets
 51. Check if all validation fields configured properly
-52. Work on Add new ticket link button issue
+52. Work on Add new ticket link button issue - it also does not close the new empty links upon form submission
+53. Make DeleteIcon a separate component and export it

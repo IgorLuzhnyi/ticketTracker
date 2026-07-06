@@ -1,6 +1,15 @@
 import { TextField, styled } from "@mui/material";
 
 const CustomInput = styled(TextField)(({ theme }) => ({
+  "& .MuiInputLabel-root": {
+    fontSize: 13,
+    transform: "translate(14px, 9px) scale(1)",
+  },
+
+  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+    transform: "translate(14px, -9px) scale(0.75)",
+  },
+
   "& .MuiOutlinedInput-root": {
     borderRadius: 5,
     fontSize: 14,
